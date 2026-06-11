@@ -1,26 +1,279 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────────
+   ameei design tokens — Crimson Spice Triad
+   Ported from DESIGN_ameei.md
+   ───────────────────────────────────────────── */
+@theme {
+  /* Primaries */
+  --color-crimson: #c0162c;
+  --color-crimson-deep: #8b0d1e;
+  --color-crimson-bright: #e8192f;
+
+  /* Secondaries */
+  --color-saffron: #f4a828;
+  --color-saffron-pale: #fde68a;
+  --color-terracotta: #c8622a;
+
+  /* Neutrals — warm, never cool */
+  --color-chalk: #fff8f0;
+  --color-ink: #1a0a0c;
+  --color-ash: #6b5b5d;
+  --color-fog: #ede3e0;
+
+  /* Dark-section surfaces (from mockups) */
+  --color-ember: #19090b;
+  --color-ember-soft: #2d1b1d;
+  --color-ember-mist: #493436;
+  --color-blush: #ffb3b1;
+  --color-amber-glow: #ffb950;
+  --color-rosewood: #e0bfbd;
+
+  /* Functional */
+  --color-success: #2d7a4f;
+
+  /* Typography */
+  --font-display: var(--font-fraunces), "Fraunces", serif;
+  --font-body: var(--font-dm-sans), "DM Sans", sans-serif;
+  --font-accent: var(--font-caveat), "Caveat", cursive;
+
+  /* Type scale (fluid) */
+  --text-display-hero: clamp(2.5rem, 4.5vw, 4rem);
+  --text-display-hero--line-height: 0.96;
+  --text-display-hero--letter-spacing: -0.03em;
+  --text-display-hero--font-weight: 900;
+
+  --text-headline-lg: clamp(1.75rem, 2.6vw, 2.375rem);
+  --text-headline-lg--line-height: 1.12;
+  --text-headline-lg--letter-spacing: -0.02em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: clamp(1.0625rem, 1.4vw, 1.25rem);
+  --text-headline-md--line-height: 1.25;
+  --text-headline-md--font-weight: 700;
+
+  --text-editorial: clamp(1.0625rem, 1.5vw, 1.375rem);
+  --text-editorial--line-height: 1.4;
+  --text-editorial--font-weight: 400;
+
+  --text-body-lg: 1.0625rem;
+  --text-body-lg--line-height: 1.6;
+
+  --text-body-md: 0.9375rem;
+  --text-body-md--line-height: 1.6;
+
+  --text-label-caps: 0.6875rem;
+  --text-label-caps--line-height: 1.3;
+  --text-label-caps--letter-spacing: 0.16em;
+  --text-label-caps--font-weight: 700;
+
+  /* Spacing & layout */
+  --spacing-gutter: 1.5rem;
+  --spacing-section: clamp(3.5rem, 7vw, 6rem);
+  --container-page: 80rem;
+
+  /* Radii */
+  --radius-card: 1rem;
+  --radius-panel: 2rem;
+
+  /* Motion — spring, joyful */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Shadows — crimson-tinted, never grey */
+  --shadow-spice: 0 4px 24px rgba(192, 22, 44, 0.12);
+  --shadow-spice-lg: 0 20px 40px -10px rgba(192, 22, 44, 0.18);
+  --shadow-saffron-glow: 0 8px 30px rgba(244, 168, 40, 0.45);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ─────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-chalk);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: var(--color-crimson);
+  color: var(--color-chalk);
+}
+
+/* ── Texture: film-grain noise overlay ────── */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Scroll reveal system ─────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s var(--ease-out-soft),
+    transform 0.7s var(--ease-spring);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal[data-reveal="left"] {
+  transform: translateX(-32px);
+}
+.reveal[data-reveal="right"] {
+  transform: translateX(32px);
+}
+.reveal[data-reveal="scale"] {
+  transform: scale(0.92);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Entrance keyframes (page-load hero) ──── */
+@keyframes drop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-28px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(9deg);
+  }
+}
+
+@keyframes float-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(139, 13, 30, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(244, 168, 40, 0.55);
+  }
+}
+
+.animate-drop-in {
+  animation: drop-in 0.8s var(--ease-spring) both;
+}
+.animate-fade-up {
+  animation: fade-up 0.7s var(--ease-out-soft) both;
+}
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+.animate-float-drift {
+  animation: float-drift 5s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3.2s ease-in-out infinite;
+}
+
+/* Stagger helpers for load-in orchestration */
+.delay-1 {
+  animation-delay: 90ms;
+}
+.delay-2 {
+  animation-delay: 180ms;
+}
+.delay-3 {
+  animation-delay: 280ms;
+}
+.delay-4 {
+  animation-delay: 400ms;
+}
+.delay-5 {
+  animation-delay: 540ms;
+}
+
+/* ── Micro-interactions ───────────────────── */
+.hover-lift {
+  transition:
+    transform 0.32s var(--ease-spring),
+    box-shadow 0.32s var(--ease-out-soft);
+}
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-spice-lg);
+}
+
+.btn-spice {
+  transition:
+    transform 0.18s var(--ease-spring),
+    background-color 0.18s ease,
+    box-shadow 0.32s ease;
+}
+.btn-spice:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+.btn-spice:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ── Reduced motion: stillness with dignity ─ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-drop-in,
+  .animate-fade-up,
+  .animate-float,
+  .animate-float-drift,
+  .animate-pulse-glow {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
