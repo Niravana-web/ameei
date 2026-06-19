@@ -2,12 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import {
-  getAllProducts,
-  getProductBySlug,
-  getRelatedProducts,
-  getCategoryLabel,
-} from "@/lib/products";
+import { getProductBySlug, getRelatedProducts } from "@/lib/catalog";
+import { getCategoryLabel, defaultPrice } from "@/lib/products";
 import { siteConfig, formatPrice } from "@/lib/site";
 import { Container, Badge } from "@/components/ui/primitives";
 import { ChevronRightIcon, FlameIcon } from "@/components/ui/icons";
@@ -20,13 +16,9 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return getAllProducts().map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return {};
 
   return {
@@ -50,10 +42,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const related = getRelatedProducts(product.slug);
+  const related = await getRelatedProducts(product.slug);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -66,7 +58,7 @@ export default async function ProductPage({ params }: PageProps) {
       "@type": "Offer",
       url: `${siteConfig.url}/shop/${product.slug}`,
       priceCurrency: "USD",
-      price: product.price,
+      price: defaultPrice(product),
       availability: "https://schema.org/InStock",
     },
   };
@@ -133,7 +125,7 @@ export default async function ProductPage({ params }: PageProps) {
 
           <div className="animate-fade-up delay-2 mb-3 flex items-center gap-3">
             <p className="font-display text-editorial italic text-ink">
-              {formatPrice(product.price)}
+              from {formatPrice(defaultPrice(product))}
             </p>
             <span
               className={`flex items-center gap-0.5 ${
@@ -205,7 +197,7 @@ export default async function ProductPage({ params }: PageProps) {
                   {rel.name}
                 </h3>
                 <p className="font-display text-base italic text-ash">
-                  {formatPrice(rel.price)}
+                  from {formatPrice(defaultPrice(rel))}
                 </p>
               </Link>
             </Reveal>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getAllProducts } from "@/lib/products";
+import { getAllProducts } from "@/lib/catalog";
 import { siteConfig, formatPrice } from "@/lib/site";
 import { ShopBrowser } from "@/components/shop/ShopBrowser";
 import { Container, NoiseOverlay } from "@/components/ui/primitives";
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ShopPage() {
-  const products = getAllProducts();
+export default async function ShopPage() {
+  const products = await getAllProducts();
 
   const itemListJsonLd = {
     "@context": "https://schema.org",

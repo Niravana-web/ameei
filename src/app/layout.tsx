@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, DM_Sans, Caveat } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { CartProvider } from "@/lib/cart";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -84,20 +86,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${fraunces.variable} ${dmSans.variable} ${caveat.variable} flex min-h-screen flex-col antialiased`}
-      >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
-          }}
-        />
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${fraunces.variable} ${dmSans.variable} ${caveat.variable} flex min-h-screen flex-col antialiased`}
+        >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+            }}
+          />
+          <CartProvider>
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
+          </CartProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

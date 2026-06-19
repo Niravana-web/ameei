@@ -1,14 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getFeaturedProducts } from "@/lib/products";
+import { getFeaturedProducts } from "@/lib/catalog";
+import { defaultPrice } from "@/lib/products";
 import { formatPrice } from "@/lib/site";
 import { Container, NoiseOverlay, Badge, SectionHeading } from "@/components/ui/primitives";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { Reveal } from "@/components/ui/Reveal";
 
 /** Dark "ember" section showing the three hero products. */
-export function FeaturedProducts() {
-  const featured = getFeaturedProducts();
+export async function FeaturedProducts() {
+  const featured = await getFeaturedProducts();
 
   return (
     <section className="relative bg-ember py-14 text-chalk md:py-20">
@@ -70,7 +71,7 @@ export function FeaturedProducts() {
                       </p>
                     </div>
                     <span className="font-display text-lg text-amber-glow">
-                      {formatPrice(product.price)}
+                      {formatPrice(defaultPrice(product))}
                     </span>
                   </div>
                 </Link>

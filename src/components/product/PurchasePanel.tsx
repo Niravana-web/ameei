@@ -1,17 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import type { Product } from "@/lib/products";
+import { type Product, priceFor } from "@/lib/products";
 import { formatPrice } from "@/lib/site";
+import { useCart } from "@/lib/cart";
 import { PlusIcon, MinusIcon } from "@/components/ui/icons";
 
-/** Weight selector, quantity stepper, and add-to-cart CTA (visual for now). */
+/** Weight selector, quantity stepper, and add-to-cart CTA. */
 export function PurchasePanel({ product }: { product: Product }) {
+  const { add } = useCart();
   const [weight, setWeight] = useState(product.defaultWeight);
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+  const unitPrice = priceFor(product, weight);
+
   function handleAdd() {
+    add({
+      slug: product.slug,
+      name: product.name,
+      weight,
+      qty,
+      unitPrice,
+      image: product.image.src,
+    });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
   }
@@ -27,17 +39,17 @@ export function PurchasePanel({ product }: { product: Product }) {
           <div className="flex flex-wrap gap-4">
             {product.weights.map((w) => (
               <button
-                key={w}
+                key={w.label}
                 type="button"
-                aria-pressed={weight === w}
-                onClick={() => setWeight(w)}
+                aria-pressed={weight === w.label}
+                onClick={() => setWeight(w.label)}
                 className={`btn-spice rounded-full border px-4 py-1.5 font-body text-body-md transition-all duration-200 ${
-                  weight === w
+                  weight === w.label
                     ? "border-ink bg-white text-ink shadow-sm"
                     : "border-ash/30 bg-white text-ash hover:border-ink/40 hover:bg-chalk"
                 }`}
               >
-                {w}
+                {w.label} · {formatPrice(w.price)}
               </button>
             ))}
           </div>
@@ -87,7 +99,7 @@ export function PurchasePanel({ product }: { product: Product }) {
         <span className="relative z-10">
           {added
             ? "Added to your stash ✓"
-            : `Add to Cart — ${formatPrice(product.price * qty)}`}
+            : `Add to Cart — ${formatPrice(unitPrice * qty)}`}
         </span>
         <span className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10" />
       </button>

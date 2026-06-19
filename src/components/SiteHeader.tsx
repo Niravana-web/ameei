@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 import { navLinks } from "@/lib/site";
+import { useCart } from "@/lib/cart";
 import {
   ShoppingBagIcon,
   PersonIcon,
@@ -19,6 +21,8 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { count } = useCart();
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -85,18 +89,32 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          <button
-            aria-label="Shopping bag"
-            className="rounded-full border border-transparent p-1.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk"
+          <Link
+            href="/cart"
+            aria-label={`Shopping bag, ${count} item${count === 1 ? "" : "s"}`}
+            className="relative rounded-full border border-transparent p-1.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk"
           >
             <ShoppingBagIcon size={18} />
-          </button>
-          <button
-            aria-label="Account"
-            className="hidden rounded-full border border-transparent p-1.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk sm:block"
-          >
-            <PersonIcon size={18} />
-          </button>
+            {count > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-crimson px-1 text-[0.625rem] font-bold leading-none text-white">
+                {count}
+              </span>
+            )}
+          </Link>
+          {isSignedIn ? (
+            <span className="hidden items-center sm:flex">
+              <UserButton />
+            </span>
+          ) : (
+            <SignInButton mode="modal">
+              <button
+                aria-label="Sign in"
+                className="hidden rounded-full border border-transparent p-1.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk sm:block"
+              >
+                <PersonIcon size={18} />
+              </button>
+            </SignInButton>
+          )}
           <button
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}

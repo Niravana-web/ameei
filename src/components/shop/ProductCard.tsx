@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Product } from "@/lib/products";
+import { type Product, defaultPrice } from "@/lib/products";
 import { formatPrice } from "@/lib/site";
 import { Badge, NoiseOverlay } from "@/components/ui/primitives";
 import { PlusIcon } from "@/components/ui/icons";
@@ -41,7 +41,7 @@ export function ProductCard({ product }: { product: Product }) {
         </h3>
         <div className="mt-1 flex items-center justify-between">
           <span className="font-body text-body-lg font-bold text-crimson">
-            {formatPrice(product.price)}
+            {formatPrice(defaultPrice(product))}
           </span>
           <Link
             href={`/shop/${product.slug}`}

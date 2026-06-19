@@ -1,0 +1,43 @@
+// ameei data layer. MySQL via the @prisma/adapter-mariadb driver adapter (Prisma 7).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  name         String
+  tagline      String
+  description  String   @db.Text
+  category     String // Category union — validated in app layer
+  spiceLevel   Int // 1..3
+  badge        String? // "BESTSELLER" | "NEW"
+  // JSON string columns; typed accessors live in catalog.ts.
+  image        String   @db.Text // { src, alt }
+  gallery      String   @db.Text // [{ src, alt }]
+  weights      String   @db.Text // [{ label, price }] — price in USD
+  defaultWeight String
+  ingredients  String   @db.Text
+  nutrition    String   @db.Text
+  shipping     String   @db.Text
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  stripeSessionId String   @unique
+  email           String?
+  amountTotal     Int // cents
+  currency        String   @default("usd")
+  status          String // "paid" | "pending" | ...
+  items           String   @db.Text // JSON: [{ slug, name, weight, qty, unitPrice }]
+  createdAt       DateTime @default(now())
+}
