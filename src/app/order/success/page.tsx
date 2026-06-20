@@ -37,7 +37,7 @@ export default async function OrderSuccessPage({
         </div>
         <h1 className="font-display text-headline-lg text-crimson">Order confirmed</h1>
         <p className="mt-3 font-body text-body-md text-ink">
-          Thank you — your spices are on their way.
+          Thank you — your snacks are on their way.
           {email && (
             <>
               {" "}

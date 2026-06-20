@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 import { navLinks } from "@/lib/site";
 import { useCart } from "@/lib/cart";
+import { ShippingProfile } from "@/components/account/ShippingProfile";
 import {
   ShoppingBagIcon,
   PersonIcon,
@@ -103,15 +104,31 @@ export function SiteHeader() {
           </Link>
           {isSignedIn ? (
             <span className="hidden items-center sm:flex">
-              <UserButton />
+              <UserButton>
+                {/* Custom "Shipping" tab inside Manage account (phone + address) */}
+                <UserButton.UserProfilePage
+                  label="Shipping"
+                  url="shipping"
+                  labelIcon={<PersonIcon size={16} />}
+                >
+                  <ShippingProfile />
+                </UserButton.UserProfilePage>
+                {/* "Your orders" link in the dropdown */}
+                <UserButton.MenuItems>
+                  <UserButton.Link
+                    label="Your orders"
+                    href="/account/orders"
+                    labelIcon={<ShoppingBagIcon size={16} />}
+                  />
+                </UserButton.MenuItems>
+              </UserButton>
             </span>
           ) : (
             <SignInButton mode="modal">
               <button
-                aria-label="Sign in"
-                className="hidden rounded-full border border-transparent p-1.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk sm:block"
+                className="hidden rounded-full bg-crimson px-4 py-1.5 font-body text-label-caps uppercase tracking-widest text-white transition-all duration-200 hover:scale-105 sm:block"
               >
-                <PersonIcon size={18} />
+                Log in
               </button>
             </SignInButton>
           )}

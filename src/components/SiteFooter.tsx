@@ -4,7 +4,7 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { siteConfig } from "@/lib/site";
 
 const shopLinks = [
-  { label: "All Spices", href: "/shop" },
+  { label: "All Snacks", href: "/shop" },
   { label: "Crunch Mixes", href: "/shop" },
   { label: "Gift Sets", href: "/shop" },
   { label: "Wholesale", href: "/shop" },

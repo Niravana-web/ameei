@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useUser, SignInButton } from "@clerk/nextjs";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/site";
 import { Container } from "@/components/ui/primitives";
@@ -10,6 +11,7 @@ import { PlusIcon, MinusIcon } from "@/components/ui/icons";
 
 export default function CartPage() {
   const { items, setQty, remove, subtotal, count } = useCart();
+  const { isSignedIn } = useUser();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -121,14 +123,25 @@ export default function CartPage() {
                 {error}
               </p>
             )}
-            <button
-              type="button"
-              onClick={checkout}
-              disabled={loading}
-              className="btn-spice mt-4 w-full rounded-full bg-crimson py-3.5 font-body text-label-caps uppercase tracking-widest text-white shadow-lg transition-opacity disabled:opacity-60"
-            >
-              {loading ? "Redirecting…" : "Checkout"}
-            </button>
+            {isSignedIn ? (
+              <button
+                type="button"
+                onClick={checkout}
+                disabled={loading}
+                className="btn-spice mt-4 w-full rounded-full bg-crimson py-3.5 font-body text-label-caps uppercase tracking-widest text-white shadow-lg transition-opacity disabled:opacity-60"
+              >
+                {loading ? "Redirecting…" : "Checkout"}
+              </button>
+            ) : (
+              <SignInButton mode="modal" forceRedirectUrl="/cart">
+                <button
+                  type="button"
+                  className="btn-spice mt-4 w-full rounded-full bg-crimson py-3.5 font-body text-label-caps uppercase tracking-widest text-white shadow-lg"
+                >
+                  Sign in to checkout
+                </button>
+              </SignInButton>
+            )}
             <Link
               href="/shop"
               className="mt-3 block text-center font-body text-body-sm text-ash hover:text-crimson"

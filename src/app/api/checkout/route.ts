@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { rowToProduct } from "@/lib/catalog";
@@ -6,6 +7,11 @@ import { priceCart, type CheckoutItem } from "@/lib/checkout";
 import { siteConfig } from "@/lib/site";
 
 export async function POST(req: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Sign in to checkout." }, { status: 401 });
+  }
+
   let items: CheckoutItem[];
   try {
     const body = await req.json();
@@ -62,6 +68,7 @@ export async function POST(req: Request) {
     await prisma.order.create({
       data: {
         stripeSessionId: session.id,
+        userId,
         amountTotal,
         currency: "usd",
         status: "pending",

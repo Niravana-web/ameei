@@ -27,7 +27,7 @@ export async function FeaturedProducts() {
               href="/shop"
               className="group mt-6 hidden items-center gap-2 font-body text-label-caps uppercase text-blush transition-colors hover:text-amber-glow md:flex"
             >
-              View All Spices
+              View All Snacks
               <ArrowRightIcon
                 size={18}
                 className="transition-transform duration-300 group-hover:translate-x-2"
@@ -90,7 +90,7 @@ export async function FeaturedProducts() {
           href="/shop"
           className="mt-8 flex w-full items-center justify-center gap-2 rounded-full border border-chalk/20 py-3 font-body text-label-caps uppercase text-blush md:hidden"
         >
-          View All Spices
+          View All Snacks
         </Link>
       </Container>
     </section>

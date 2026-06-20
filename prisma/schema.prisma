@@ -34,10 +34,13 @@ model Product {
 model Order {
   id              String   @id @default(cuid())
   stripeSessionId String   @unique
+  userId          String? // Clerk user id — who placed it
   email           String?
   amountTotal     Int // cents
   currency        String   @default("usd")
   status          String // "paid" | "pending" | ...
   items           String   @db.Text // JSON: [{ slug, name, weight, qty, unitPrice }]
   createdAt       DateTime @default(now())
+
+  @@index([userId])
 }
