@@ -30,6 +30,7 @@ interface CartCtx {
   clear: () => void;
   count: number;
   subtotal: number;
+  hydrated: boolean;
 }
 
 const Ctx = createContext<CartCtx | null>(null);
@@ -85,8 +86,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clear: () => setItems([]),
       count: items.reduce((n, p) => n + p.qty, 0),
       subtotal: items.reduce((n, p) => n + p.qty * p.unitPrice, 0),
+      hydrated,
     };
-  }, [items]);
+  }, [items, hydrated]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

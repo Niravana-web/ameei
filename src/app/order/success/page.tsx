@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { stripe } from "@/lib/stripe";
+import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/site";
 import { Container } from "@/components/ui/primitives";
 import { ClearCart } from "@/components/cart/ClearCart";
@@ -23,6 +24,15 @@ export default async function OrderSuccessPage({
       const session = await stripe.checkout.sessions.retrieve(session_id);
       email = session.customer_details?.email ?? null;
       total = session.amount_total != null ? session.amount_total / 100 : null;
+      // Fallback reconciliation: the webhook is the canonical path, but if it's
+      // delayed or misconfigured the order stays "pending". Stripe is the source
+      // of truth here, so flip it to paid ourselves. Idempotent (updateMany).
+      if (session.payment_status === "paid") {
+        await prisma.order.updateMany({
+          where: { stripeSessionId: session.id, status: { not: "paid" } },
+          data: { status: "paid", email, amountTotal: session.amount_total ?? undefined },
+        });
+      }
     } catch {
       // Display-only — fulfillment is handled by the webhook, not this page.
     }
