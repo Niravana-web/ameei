@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
+import { useUser, UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { navLinks } from "@/lib/site";
 import { useCart } from "@/lib/cart";
 import { ShippingProfile } from "@/components/account/ShippingProfile";
@@ -124,13 +124,18 @@ export function SiteHeader() {
               </UserButton>
             </span>
           ) : (
-            <SignInButton mode="modal">
-              <button
-                className="hidden rounded-full bg-crimson px-4 py-1.5 font-body text-label-caps uppercase tracking-widest text-white transition-all duration-200 hover:scale-105 sm:block"
-              >
-                Log in
-              </button>
-            </SignInButton>
+            <span className="hidden items-center gap-2 sm:flex">
+              <SignInButton mode="modal">
+                <button className="rounded-full border border-crimson px-4 py-1.5 font-body text-label-caps uppercase tracking-widest text-crimson transition-all duration-200 hover:scale-105 hover:bg-chalk">
+                  Log in
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="rounded-full bg-crimson px-4 py-1.5 font-body text-label-caps uppercase tracking-widest text-white transition-all duration-200 hover:scale-105">
+                  Sign up
+                </button>
+              </SignUpButton>
+            </span>
           )}
           <button
             aria-label={menuOpen ? "Close menu" : "Open menu"}

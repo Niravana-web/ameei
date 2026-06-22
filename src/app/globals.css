@@ -277,3 +277,13 @@ body {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ── Clerk modal: on short viewports (tablet portrait/landscape) the centered
+   card clips its footer (sign-up link + "Secured by Clerk"). Let the backdrop
+   scroll and top-align so the whole card is always reachable. ── */
+.cl-modalBackdrop {
+  align-items: flex-start;
+  overflow-y: auto;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
