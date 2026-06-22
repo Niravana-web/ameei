@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import type { Product } from "@/lib/products";
 import { categories } from "@/lib/products";
 import type { FormState } from "@/app/admin/actions";
+import { CardImageUploader, GalleryUploader } from "@/components/admin/AdminImageUploader";
 
 type Action = (prev: FormState, formData: FormData) => Promise<FormState>;
 
@@ -49,7 +50,6 @@ export function ProductForm({
   );
 
   const weightsText = product?.weights.map((w) => `${w.label},${w.price}`).join("\n");
-  const galleryText = product?.gallery.map((g) => `${g.src} | ${g.alt}`).join("\n");
 
   return (
     <form action={formAction} className="grid max-w-3xl gap-5">
@@ -131,25 +131,9 @@ export function ProductForm({
         />
       </Field>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Card image — URL" hint="e.g. /images/products/x.jpg">
-          <input name="imageSrc" defaultValue={product?.image.src} required className={inputCls} />
-        </Field>
-        <Field label="Card image — alt text">
-          <input name="imageAlt" defaultValue={product?.image.alt} required className={inputCls} />
-        </Field>
-      </div>
+      <CardImageUploader defaultSrc={product?.image.src} defaultAlt={product?.image.alt} />
 
-      <Field label="Gallery" hint='One per line: "src | alt". First image is the main one.'>
-        <textarea
-          name="gallery"
-          defaultValue={galleryText}
-          required
-          rows={3}
-          placeholder={"/images/products/x-main.jpg | Main shot\n/images/products/x-2.jpg | Detail"}
-          className={`${inputCls} font-mono`}
-        />
-      </Field>
+      <GalleryUploader defaultImages={product?.gallery} />
 
       <Field label="Ingredients">
         <textarea name="ingredients" defaultValue={product?.ingredients} required rows={3} className={inputCls} />

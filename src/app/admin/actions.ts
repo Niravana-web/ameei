@@ -2,17 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-
 // Defense in depth: actions are directly invocable, so re-check the role here too
 // (not only in the layout).
-async function requireAdmin() {
-  const user = await currentUser();
-  const role = (user?.publicMetadata as { role?: string })?.role;
-  if (role !== "admin") throw new Error("Forbidden: admin role required.");
-}
+import { requireAdmin } from "@/lib/auth";
 
 const imageSchema = z.object({ src: z.string().min(1), alt: z.string().min(1) });
 
