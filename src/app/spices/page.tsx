@@ -5,6 +5,7 @@ import {
   PhotoSlot,
   SectionHeading,
   Badge,
+  NoiseOverlay,
 } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { ChiliIcon, FlameIcon } from "@/components/ui/icons";
@@ -130,13 +131,13 @@ export default function SpicesPage() {
       </section>
 
       {/* Pantry */}
-      <section className="bg-ember-mist py-14 md:py-20">
+      <section className="relative bg-ember py-14 text-chalk md:py-20">
         <Container>
           <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-center">
             <Reveal>
-              <ChiliIcon size={36} className="mb-4 text-crimson" />
-              <SectionHeading eyebrow="The pantry" title="Spices we reach for again and again" />
-              <p className="mt-4 max-w-md font-body text-body-md text-ash">
+              <ChiliIcon size={36} className="mb-4 text-amber-glow" />
+              <SectionHeading eyebrow="The pantry" title="Spices we reach for again and again" dark />
+              <p className="mt-4 max-w-md font-body text-body-md text-rosewood">
                 A handful of spices show up across the whole range — the quiet
                 regulars that give an ameei mix its signature. Here&apos;s what
                 they bring to the bowl.
@@ -147,10 +148,11 @@ export default function SpicesPage() {
                 {pantry.map((p) => (
                   <li
                     key={p.name}
-                    className="rounded-2xl border border-crimson/10 bg-white/80 p-4 shadow-sm"
+                    className="group relative overflow-hidden rounded-card border border-chalk/15 bg-ember-soft/40 p-4 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-chalk/30"
                   >
-                    <p className="font-display text-editorial text-ink">{p.name}</p>
-                    <p className="mt-1 font-body text-body-sm text-ash">{p.note}</p>
+                    <NoiseOverlay />
+                    <p className="font-body text-body-lg font-bold text-chalk">{p.name}</p>
+                    <p className="mt-1 font-body text-body-sm text-rosewood">{p.note}</p>
                   </li>
                 ))}
               </ul>

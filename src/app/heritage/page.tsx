@@ -4,6 +4,7 @@ import {
   ButtonLink,
   PhotoSlot,
   SectionHeading,
+  NoiseOverlay,
 } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { ChiliIcon } from "@/components/ui/icons";
@@ -130,25 +131,27 @@ export default function HeritagePage() {
       </section>
 
       {/* Timeline */}
-      <section className="bg-ember-mist py-14 md:py-20">
+      <section className="relative bg-ember py-14 text-chalk md:py-20">
         <Container>
           <Reveal>
             <SectionHeading
               eyebrow="How we got here"
               title="A recipe, carried forward"
               align="center"
+              dark
             />
           </Reveal>
           <ol className="mx-auto mt-10 max-w-3xl space-y-4">
             {timeline.map((t, i) => (
               <Reveal key={t.era} delay={i * 90} as="li">
-                <div className="flex gap-5 rounded-[1.25rem] border border-crimson/10 bg-white/80 p-6 shadow-sm">
-                  <span className="font-display text-headline-md text-saffron">
+                <div className="group relative flex gap-5 overflow-hidden rounded-card border border-chalk/15 bg-ember-soft/40 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-chalk/30">
+                  <NoiseOverlay />
+                  <span className="font-display text-headline-md text-amber-glow">
                     0{i + 1}
                   </span>
                   <div>
-                    <h3 className="font-display text-editorial text-ink">{t.era}</h3>
-                    <p className="mt-1 font-body text-body-md text-ash">{t.body}</p>
+                    <h3 className="font-display text-editorial text-chalk">{t.era}</h3>
+                    <p className="mt-1 font-body text-body-md text-rosewood">{t.body}</p>
                   </div>
                 </div>
               </Reveal>
