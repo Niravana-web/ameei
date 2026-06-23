@@ -93,6 +93,31 @@ export function Badge({
   );
 }
 
+/* ── PhotoSlot ────────────────────────────────
+   Editorial image placeholder. Swap for a real <Image> later using the same
+   wrapper className; `label` documents what photo belongs here. */
+export function PhotoSlot({
+  label,
+  className = "",
+  ratio = "aspect-[4/3]",
+}: {
+  label: string;
+  className?: string;
+  ratio?: string;
+}) {
+  return (
+    <div
+      aria-hidden
+      className={`relative flex ${ratio} w-full items-end overflow-hidden rounded-[1.25rem] border border-crimson/10 bg-gradient-to-br from-ember-soft via-blush to-saffron-pale shadow-spice ${className}`}
+    >
+      <NoiseOverlay />
+      <span className="relative z-10 m-4 rounded-full bg-white/70 px-3 py-1 font-body text-[10px] uppercase tracking-[0.16em] text-crimson backdrop-blur">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 /* ── SectionHeading ───────────────────────── */
 export function SectionHeading({
   eyebrow,
