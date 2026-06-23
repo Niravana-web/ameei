@@ -25,36 +25,42 @@ const entries = [
     title: "Five ways to cook with a bag of chivda",
     excerpt: "Our snack mixes aren’t just for the bowl. From quick chaat to a crunchy topping for rice, here’s where they go next.",
     read: "5 min read",
+    img: "/images/pages/journal-samosas.jpg",
   },
   {
     category: "Pairings",
     title: "What to drink with heat",
     excerpt: "Chai, cold lager, salted lassi — a short field guide to pairing drinks with each of our three spice levels.",
     read: "4 min read",
+    img: "/images/pages/journal-pairings.jpg",
   },
   {
     category: "Spice Notes",
     title: "Why we toast before we grind",
     excerpt: "A two-minute look at the single step that does the most for flavour — and why we never skip it.",
     read: "3 min read",
+    img: "/images/pages/spices-hero.jpg",
   },
   {
     category: "Behind the Batch",
     title: "What ‘small batch’ actually means here",
     excerpt: "No marketing fog — just how big a batch is, how often we make one, and why we keep it that way.",
     read: "4 min read",
+    img: "/images/pages/journal-kitchen.jpg",
   },
   {
     category: "Recipes",
     title: "A snack board for last-minute guests",
     excerpt: "Three mixes, a few fresh bits, ten minutes. The fastest way to make a table look generous.",
     read: "3 min read",
+    img: "/images/pages/journal-snackboard.jpg",
   },
   {
     category: "Spice Notes",
     title: "Reading a spice rating",
     excerpt: "Mild, medium, hot — what each level feels like, and how to pick the right one for the room.",
     read: "2 min read",
+    img: "/images/pages/journal-curry.jpg",
   },
 ];
 
@@ -110,7 +116,8 @@ export default function JournalPage() {
               <Reveal key={e.title} delay={(i % 3) * 90} as="article">
                 <div className="group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-crimson/10 bg-white/70 shadow-spice backdrop-blur">
                   <PhotoSlot
-                    label={`Photo — ${e.category.toLowerCase()}`}
+                    label={e.title}
+                    src={e.img}
                     ratio="aspect-[16/10]"
                     className="rounded-none"
                   />
@@ -161,7 +168,8 @@ export default function JournalPage() {
                 </div>
               </div>
               <PhotoSlot
-                label="Photo — flat-lay of snacks, spices & a notebook"
+                label="An overhead spread of fresh, colourful dishes"
+                src="/images/pages/journal-flatlay.jpg"
                 ratio="aspect-[4/3]"
               />
             </div>

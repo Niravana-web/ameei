@@ -87,7 +87,8 @@ export default function HeritagePage() {
             </Reveal>
             <Reveal direction="right">
               <PhotoSlot
-                label="Photo — well-worn family recipe notes & a brass bowl"
+                label="Bowls of whole spices set out in a traditional kitchen"
+                src="/images/pages/heritage-hero.jpg"
                 ratio="aspect-[4/5]"
               />
             </Reveal>

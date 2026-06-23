@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode, ButtonHTMLAttributes } from "react";
 
 /* ── Container ────────────────────────────── */
@@ -94,17 +95,34 @@ export function Badge({
 }
 
 /* ── PhotoSlot ────────────────────────────────
-   Editorial image placeholder. Swap for a real <Image> later using the same
-   wrapper className; `label` documents what photo belongs here. */
+   Editorial image. With `src` it renders a real photo; without one it falls back
+   to a captioned gradient placeholder. `label` doubles as alt text / caption. */
 export function PhotoSlot({
   label,
+  src,
   className = "",
   ratio = "aspect-[4/3]",
 }: {
   label: string;
+  src?: string;
   className?: string;
   ratio?: string;
 }) {
+  if (src) {
+    return (
+      <div
+        className={`relative ${ratio} w-full overflow-hidden rounded-[1.25rem] border border-crimson/10 shadow-spice ${className}`}
+      >
+        <Image
+          src={src}
+          alt={label.replace(/^Photo\s*[—-]\s*/, "")}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
+        />
+      </div>
+    );
+  }
   return (
     <div
       aria-hidden

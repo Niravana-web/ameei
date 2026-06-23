@@ -92,7 +92,8 @@ export default function SpicesPage() {
             </Reveal>
             <Reveal direction="right">
               <PhotoSlot
-                label="Photo — whole spices toasting in a pan"
+                label="Whole spices, ginger and turmeric laid out before blending"
+                src="/images/pages/spices-hero.jpg"
                 ratio="aspect-[4/5]"
               />
             </Reveal>
