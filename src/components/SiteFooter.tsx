@@ -1,20 +1,17 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/primitives";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { siteConfig } from "@/lib/site";
 
 const shopLinks = [
-  { label: "All Snacks", href: "/shop" },
-  { label: "Crunch Mixes", href: "/shop" },
-  { label: "Gift Sets", href: "/shop" },
-  { label: "Wholesale", href: "/shop" },
+  { label: "Spicy Crunch Mix", href: "/shop/spicy-crunch-mix" },
+  { label: "Nilon Poha Chivda", href: "/shop/nilon-poha-chivda" },
+  { label: "Upma Mix", href: "/shop/upma-mix" },
+  { label: "Masala Peanuts", href: "/shop/masala-peanuts" },
 ];
 
 const legalLinks = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Sustainability", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
 ];
 
 export function SiteFooter() {
@@ -73,24 +70,7 @@ export function SiteFooter() {
             © {new Date().getFullYear()} ameei snacks. crunch with a little
             spice.
           </p>
-          <div className="flex gap-6">
-            <a
-              href={siteConfig.links.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-crimson"
-            >
-              Instagram
-            </a>
-            <a
-              href={siteConfig.links.tiktok}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-crimson"
-            >
-              TikTok
-            </a>
-          </div>
+          <div />
         </div>
       </Container>
     </footer>
