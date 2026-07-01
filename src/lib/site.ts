@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: "Crunch with a little bit of spice",
   description:
     "Small-batch Indian snack mixes — roasted, spiced, and packed the way they're meant to be. Bold flavour, ancestral recipes, a little bit of mischief.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ameei.in",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ameei.in",
   ogImage: "/images/products/hero-chivda-bowl.jpg",
   links: {
     instagram: "https://instagram.com/ameei.snacks",

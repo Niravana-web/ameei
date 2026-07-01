@@ -34,7 +34,7 @@ const SEED: Seed[] = [
     name: "Spicy Crunch Mix",
     tagline: "Intense heat, deep flavor.",
     description:
-      "A fierce blend of ancestral spices, roasted nuts, and crispy legumes. Crafted for those who believe heat is an art form. Every handful delivers a complex symphony of smoke, crunch, and a lingering crimson glow.",
+      "What is Spicy Crunch Mix? It's ameei's fieriest snack — a bold blend of roasted peanuts, crisp gram-flour sev, and Guntur red chili, built for people who treat heat as an art form rather than an accident. We toast plump peanuts slow, then fold in cumin, black pepper, and a hit of tangy amchur (dried mango powder) that cuts through the burn just enough to pull you back for another handful. Everything is roasted in cold-pressed mustard oil, never fried, so the crunch stays honest while the spice stays loud. It's the mix that started the ameei name, the one people request by handful rather than by bag. Pour it into a bowl before guests arrive or eat it straight from the pouch at the counter. Either way, expect a complex symphony of smoke, crunch, and a lingering crimson glow that lasts well past the first bite.",
     price: 12,
     weights: ["150g", "300g", "500g"],
     defaultWeight: "300g",
@@ -62,7 +62,7 @@ const SEED: Seed[] = [
     name: "Nilon Poha Chivda",
     tagline: "Light, airy, subtly sweet.",
     description:
-      "Paper-thin flattened rice roasted until it whispers, tossed with golden fried dal, curry leaves, and a hint of turmeric. The gentlest member of the family — but never boring.",
+      "What is Nilon Poha Chivda? It's a light, savory snack made from flattened rice (poha) roasted until paper-thin and whisper-crisp, then tossed with golden fried chana dal, fresh curry leaves, raisins, cashews, and a gentle dusting of turmeric. Unlike heavier fried mixtures, poha chivda is roasted rather than deep-fried, which keeps it naturally gluten-free and easy on the stomach without losing any of its signature crunch. The turmeric gives it a warm golden color, the curry leaves add a fragrant background note, and the raisins bring a small pocket of sweetness between bites of salt and spice. It's the mildest member of the ameei family — spice level one out of three — which makes it the mix people reach for when they want flavor without fire, whether that's an afternoon snack, a topping for yogurt, or the crunchy layer in a quick homemade chaat. Never boring, just gentler.",
     price: 10.5,
     weights: ["150g", "300g", "500g"],
     defaultWeight: "300g",
@@ -84,7 +84,7 @@ const SEED: Seed[] = [
     name: "Upma Mix",
     tagline: "Classic comfort, spiced right.",
     description:
-      "Coarse roasted semolina with mustard seeds, urad dal, and dried red chilies — the breakfast of generations, ready in minutes. Comfort you can hear crackle in the pan.",
+      "What is Upma Mix? It's a ready-in-minutes version of upma, the coarse roasted semolina (rava) breakfast dish eaten across South India for generations, pre-blended with mustard seeds, urad dal, dried red chilies, curry leaves, and asafoetida so all that's left to do is add hot water or milk and stir. The semolina is roasted until golden before packing, which is what gives upma its nutty base flavor and lets the mustard seeds crackle the moment they hit a hot pan. Medium on the ameei spice scale, it sits between comfort food and genuine heat: enough dried chili to wake you up, not so much that it overwhelms breakfast. Traditionally served with a squeeze of lemon, chopped vegetables, or a side of chutney, it's the dish generations of households have relied on when there's no time to cook from scratch but no interest in skipping a real breakfast either.",
     price: 14,
     weights: ["300g", "500g"],
     defaultWeight: "300g",
@@ -107,7 +107,7 @@ const SEED: Seed[] = [
     name: "Masala Peanuts",
     tagline: "Crimson-coated and dangerously good.",
     description:
-      "Plump peanuts wrapped in a fiery gram-flour crust, roasted — never fried — to a deep crimson crunch. Sea salt and dried herbs cling to every nut. You will not stop at one handful.",
+      "What is Masala Peanuts? It's ameei's take on the classic Indian bar snack: plump peanuts coated in a fiery gram-flour crust, roasted rather than fried, until they turn a deep crimson and shatter with a satisfying crunch. Garlic, black salt, and cumin sit inside that crust alongside red chili powder, all bound together with cold-pressed mustard oil instead of the deep-fried batter most masala peanuts rely on, so the flavor stays sharp without the greasy aftertaste. Spice level three out of three makes this one of the hotter mixes in the range, closer to a bar snack built for chili lovers than a mild afternoon nibble. It pairs naturally with a cold drink, works as a standalone bowl at a gathering, or gets crushed over a quick chaat for extra crunch and heat. Most people don't stop at one handful, and the crust is exactly why.",
     price: 9.5,
     weights: ["150g", "300g"],
     defaultWeight: "150g",
@@ -126,7 +126,7 @@ const SEED: Seed[] = [
     name: "Roasted Cornflakes Mix",
     tagline: "Golden, geometric, gone too fast.",
     description:
-      "Crisp golden cornflakes roasted with raisins, peanuts, and a saffron-warm spice dusting. Sharp edges, soft sweetness, and a crackle you can hear across the room.",
+      "What is Roasted Cornflakes Mix? It's a savory twist on an everyday breakfast staple: crisp golden cornflakes roasted alongside peanuts and raisins, then dusted with turmeric, curry leaves, and red chili powder for a saffron-warm, medium-heat finish. The cornflakes keep their sharp, geometric crunch through roasting, which is what separates this mix from softer namkeen blends, while the raisins add small bursts of sweetness that offset the chili. It sits at spice level two of three, so it has real warmth without tipping into fire-mix territory, making it an easy entry point for people who find the hotter ameei blends too much. Cornflakes mixtures like this one are a common tea-time snack across India, served in small bowls alongside chai, and this version keeps that tradition while roasting rather than frying for a lighter, naturally gluten-free result you can hear crackle from across the room.",
     price: 11,
     weights: ["150g", "300g", "500g"],
     defaultWeight: "300g",
@@ -145,7 +145,7 @@ const SEED: Seed[] = [
     name: "Sev Mamra",
     tagline: "Street-corner classic, done right.",
     description:
-      "Featherlight puffed rice layered with thin golden chickpea sev and a dusting of red chili. The street-corner classic of every Indian childhood — roasted in small batches and sealed at peak crunch.",
+      "What is Sev Mamra? It's a street-corner classic built from two simple ingredients: featherlight puffed rice (mamra) layered with thin, golden chickpea-flour noodles (sev), finished with a dusting of red chili powder and turmeric. It's one of the mildest mixes in the ameei range at spice level one, prized less for heat and more for texture — the puffed rice practically dissolves on the tongue while the sev holds a persistent, delicate crunch. This combination is a fixture of roadside snack stalls across India, usually eaten straight from a paper cone, and its appeal has always been how little it weighs while still filling a bowl. Because it's roasted rather than fried and kept simple, sev mamra stays crisp for longer than most bhel-style mixes and works equally well eaten on its own, folded into a quick chaat with onions and chutney, or scattered over yogurt for crunch.",
     price: 8.5,
     weights: ["150g", "300g"],
     defaultWeight: "150g",
@@ -164,7 +164,7 @@ const SEED: Seed[] = [
     name: "Smoked Ghost Pepper",
     tagline: "Handle with respect.",
     description:
-      "Ghost peppers slow-smoked over wood and ground to a deep, vibrant red powder. A pinch transforms a dish; a spoonful transforms you. Our hottest blend — wear it proudly.",
+      "What is Smoked Ghost Pepper powder? It's a single-ingredient spice made from ghost peppers (bhut jolokia) — among the hottest chilies grown in India — slow-smoked over wood and ground into a deep, vibrant red powder. Unlike blended chili powders, this one contains nothing but smoked ghost pepper, so its heat and smoke character come through undiluted; a pinch changes the direction of an entire dish, and a spoonful is genuinely not meant for casual use. Ghost pepper has historically been used in small quantities in northeastern Indian cooking, prized as much for its smoky depth as for its Scoville rating. This is the hottest blend ameei makes, and it's built for people who already know they want that kind of heat: stirred into oil for a marinade, added a pinch at a time to curries, or used sparingly to finish a dish that needs one more layer of intensity. Handle it with respect.",
     price: 13.5,
     weights: ["50g", "100g"],
     defaultWeight: "50g",
@@ -183,7 +183,7 @@ const SEED: Seed[] = [
     name: "Saffron Roasted Cashews",
     tagline: "Golden warmth in every bite.",
     description:
-      "Whole cashews roasted in ghee with real saffron threads and a golden-red spice blend. Warm, buttery, and quietly luxurious — the snack you bring out when company deserves it.",
+      "What is Saffron Roasted Cashews? It's whole cashews roasted in ghee with real saffron threads, white pepper, sea salt, and a whisper of cardamom, finished in a golden-red spice coating that leans warm and buttery rather than fiery. Saffron and cashews together are a traditional pairing in Indian festive cooking, often reserved for celebrations because both ingredients are prized rather than everyday. Roasting the cashews in ghee instead of oil gives them a richer, rounder flavor, while the cardamom adds a fragrant top note that keeps the mix from tasting one-dimensionally sweet or salty. At spice level one, this is the most restrained mix ameei makes — built for moments that call for something a little luxurious rather than a fire-mix crunch. It's the snack meant for guests, for gifting, or for the evening you decide a plain bowl of cashews isn't quite enough.",
     price: 16,
     weights: ["150g", "300g"],
     defaultWeight: "150g",
@@ -202,7 +202,7 @@ const SEED: Seed[] = [
     name: "The Heritage Blend",
     tagline: "Five generations in one jar.",
     description:
-      "Our founding family's masala — a complex, dark red blend of fourteen spices roasted and ground in sequence, exactly the way it has been for five generations. The backbone of every ameei recipe.",
+      "What is The Heritage Blend? It's ameei's founding family masala — a complex, dark red mix of fourteen spices, including coriander, cumin, dried red chilies, fenugreek, mustard seeds, turmeric, cinnamon, clove, cardamom, star anise, bay leaf, dry ginger, and amchur, roasted and ground in a specific sequence that has stayed unchanged for five generations. Where most of ameei's other products are ready-to-eat snacks, the Heritage Blend is a cooking spice: the same masala used as the base for the family's original recipes, meant to be stirred into oil at the start of a dish rather than eaten from the bag. The order in which the spices are roasted matters as much as the list itself, since roasting sequence changes how the oils release and how the final blend tastes once it hits a hot pan. It's the one product in the range that isn't really a snack at all — it's the backbone every other ameei recipe is built on.",
     price: 12.5,
     weights: ["100g", "200g"],
     defaultWeight: "100g",

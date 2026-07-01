@@ -8,12 +8,38 @@ import {
 } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { ChiliIcon } from "@/components/ui/icons";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Heritage — five generations of crunch",
   description:
     "The ameei story: recipes carried across five generations, made the slow way, in small batches. Bold flavour, ancestral roots, a little bit of mischief.",
   alternates: { canonical: "/heritage" },
+};
+
+// ponytail: static date — bump PAGE_UPDATED when this page's copy changes.
+const PAGE_UPDATED = "2026-01-01";
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "Five generations, one bowl: the ameei heritage",
+  description:
+    "The ameei story: recipes carried across five generations, made the slow way, in small batches.",
+  image: [`${siteConfig.url}/images/pages/heritage-hero.jpg`],
+  author: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+  publisher: {
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}/brand/ameei_logo_primary.svg`,
+    },
+  },
+  datePublished: PAGE_UPDATED,
+  dateModified: PAGE_UPDATED,
+  mainEntityOfPage: `${siteConfig.url}/heritage`,
 };
 
 // Generic, person-free milestones — about the brand, not individuals.
@@ -59,6 +85,12 @@ const values = [
 export default function HeritagePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden pb-12 pt-28 md:pb-16 md:pt-32">
         <Container>

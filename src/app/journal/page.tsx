@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   description:
     "Notes from the ameei kitchen: recipes, pairing ideas, spice know-how, and the stories behind each small batch.",
   alternates: { canonical: "/journal" },
+  // ponytail: entries below are all "Coming soon" placeholders — noindex until real posts ship.
+  robots: { index: false, follow: true },
 };
 
 const categories = ["Recipes", "Pairings", "Spice Notes", "Behind the Batch"];

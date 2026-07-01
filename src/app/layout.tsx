@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, DM_Sans, Caveat } from "next/font/google";
+import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -61,6 +62,11 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    other: {
+      "msvalidate.01": "2AB9ADA91A9DF1F0D150B75429D518D5",
+    },
+  },
 };
 
 export const viewport: Viewport = {
@@ -80,6 +86,13 @@ const organizationJsonLd = {
   sameAs: [siteConfig.links.instagram, siteConfig.links.tiktok],
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteConfig.name,
+  url: siteConfig.url,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -97,6 +110,22 @@ export default function RootLayout({
               __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
             }}
           />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c"),
+            }}
+          />
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-LBPQXP7TPJ"
+            strategy="afterInteractive"
+          />
+          <Script id="gtag-init" strategy="afterInteractive">
+            {`window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-LBPQXP7TPJ');`}
+          </Script>
           <CartProvider>
             <SiteHeader />
             <main className="flex-1">{children}</main>

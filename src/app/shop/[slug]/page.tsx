@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getProductBySlug, getRelatedProducts } from "@/lib/catalog";
+import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/catalog";
 import { getCategoryLabel, defaultPrice } from "@/lib/products";
 import { siteConfig, formatPrice } from "@/lib/site";
 import { Container, Badge } from "@/components/ui/primitives";
@@ -16,6 +16,14 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// ISR: pages regenerate at most every 5 min instead of SSR-ing on every request.
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((p) => ({ slug: p.slug }));
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
@@ -23,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: product.name,
-    description: product.description,
+    description: product.tagline,
     alternates: { canonical: `/shop/${product.slug}` },
     openGraph: {
       title: `${product.name} | ameei`,
@@ -67,13 +75,8 @@ export default async function ProductPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Shop", item: `${siteConfig.url}/shop` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: getCategoryLabel(product.category),
-        item: `${siteConfig.url}/shop`,
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: siteConfig.url },
+      { "@type": "ListItem", position: 2, name: "Shop", item: `${siteConfig.url}/shop` },
       { "@type": "ListItem", position: 3, name: product.name },
     ],
   };
