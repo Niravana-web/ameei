@@ -41,6 +41,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
+    locale: "en_US",
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
