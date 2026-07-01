@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/primitives";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { InstagramIcon } from "@/components/ui/icons";
 
 const shopLinks = [
   { label: "Spicy Crunch Mix", href: "/shop/spicy-crunch-mix" },
@@ -70,7 +71,15 @@ export function SiteFooter() {
             © {new Date().getFullYear()} ameei snacks. crunch with a little
             spice.
           </p>
-          <div />
+          <a
+            href="https://www.instagram.com/ameei_snacks/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Ameei Snacks on Instagram"
+            className="text-ash transition-colors hover:text-terracotta"
+          >
+            <InstagramIcon size={18} />
+          </a>
         </div>
       </Container>
     </footer>
