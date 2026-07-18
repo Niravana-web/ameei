@@ -93,7 +93,7 @@ export function SiteHeader() {
           <Link
             href="/cart"
             aria-label={`Shopping bag, ${count} item${count === 1 ? "" : "s"}`}
-            className="relative rounded-full border border-transparent p-1.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk"
+            className="relative rounded-full border border-transparent p-3.5 text-crimson transition-all duration-200 hover:scale-110 hover:border-crimson/30 hover:bg-chalk"
           >
             <ShoppingBagIcon size={18} />
             {count > 0 && (
@@ -141,7 +141,7 @@ export function SiteHeader() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
-            className="p-2 text-crimson md:hidden"
+            className="p-3.5 text-crimson md:hidden"
           >
             {menuOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
           </button>

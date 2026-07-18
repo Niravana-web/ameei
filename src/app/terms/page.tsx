@@ -18,7 +18,7 @@ export default function TermsPage() {
           <section>
             <h2 className="mb-3 font-display text-headline-md text-crimson-deep">1. Acceptance</h2>
             <p>
-              By accessing ameei.com or placing an order you agree to these terms. If you do not agree, please do not use the site.
+              By accessing ameei.in or placing an order you agree to these terms. If you do not agree, please do not use the site.
             </p>
           </section>
 

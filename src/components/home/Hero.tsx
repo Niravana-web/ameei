@@ -27,8 +27,9 @@ export function Hero() {
             </h1>
             <p className="animate-fade-up delay-3 max-w-md font-body text-body-lg text-ash">
               Small-batch Indian snack mixes — roasted, spiced, and packed the
-              way they&apos;re meant to be. Made with love, heat, and a little
-              bit of mischief.
+              way they&apos;re meant to be. Rooted in Indian family recipes,
+              made and shipped fresh across the US, with a little bit of
+              mischief.
             </p>
             <div className="animate-fade-up delay-4 pt-2">
               <ButtonLink href="/shop" className="animate-pulse-glow">

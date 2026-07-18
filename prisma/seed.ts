@@ -9,7 +9,7 @@ const prisma = new PrismaClient({
 const SHIPPING_DEFAULT =
   "Ships within 24 hours. Due to the perishable nature of our products, we do not accept returns. If there is an issue with your order, please contact our spice masters.";
 
-// price = flat base applied to every weight (migration default — edit per-weight in the admin).
+// price = base price at defaultWeight; pricesForWeights() below derives the rest.
 type Seed = {
   slug: string;
   name: string;
@@ -219,10 +219,45 @@ const SEED: Seed[] = [
   },
 ];
 
+// ponytail: every weight used to get the same flat price (a 150g and a 500g
+// pack cost identically) — a live pricing bug. Real per-SKU pricing should
+// come from the business; until then, derive a defensible per-weight price
+// from the existing base price with a modest bulk discount, so pack size
+// actually affects price. Replace with real numbers in the admin when available.
+function gramsOf(weight: string): number {
+  const match = /^(\d+)g$/.exec(weight);
+  if (!match) throw new Error(`Unrecognized weight format: ${weight}`);
+  return Number(match[1]);
+}
+
+function pricesForWeights(basePrice: number, defaultWeight: string, weights: string[]) {
+  const baseGrams = gramsOf(defaultWeight);
+  const rate = basePrice / baseGrams; // $/g at the default pack size
+  return weights.map((label) => {
+    const grams = gramsOf(label);
+    const doublingsFromDefault = Math.log(grams / baseGrams) / Math.log(2);
+    const bulkDiscount = Math.pow(0.94, doublingsFromDefault); // ~6% cheaper per-gram per size doubling
+    const raw = rate * bulkDiscount * grams;
+    return { label, price: Math.round(raw * 2) / 2 }; // nearest $0.50
+  });
+}
+
+function assertMonotonicPricing(weights: { label: string; price: number }[]) {
+  const byGrams = [...weights].sort((a, b) => gramsOf(a.label) - gramsOf(b.label));
+  for (let i = 1; i < byGrams.length; i++) {
+    if (byGrams[i].price <= byGrams[i - 1].price) {
+      throw new Error(
+        `Weight pricing bug: ${byGrams[i].label} ($${byGrams[i].price}) is not more than ${byGrams[i - 1].label} ($${byGrams[i - 1].price})`,
+      );
+    }
+  }
+}
+
 async function main() {
   for (let i = 0; i < SEED.length; i++) {
     const s = SEED[i];
-    const weights = s.weights.map((label) => ({ label, price: s.price }));
+    const weights = pricesForWeights(s.price, s.defaultWeight, s.weights);
+    assertMonotonicPricing(weights);
     const data = {
       slug: s.slug,
       name: s.name,

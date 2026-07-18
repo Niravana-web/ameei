@@ -65,7 +65,7 @@ export function PurchasePanel({ product }: { product: Product }) {
               type="button"
               aria-label="Decrease quantity"
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-ash transition-all hover:bg-chalk hover:text-ink active:scale-90"
+              className="flex h-12 w-12 items-center justify-center rounded-full text-ash transition-all hover:bg-chalk hover:text-ink active:scale-90"
             >
               <MinusIcon size={15} />
             </button>
@@ -80,7 +80,7 @@ export function PurchasePanel({ product }: { product: Product }) {
               type="button"
               aria-label="Increase quantity"
               onClick={() => setQty((q) => Math.min(99, q + 1))}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-ash transition-all hover:bg-chalk hover:text-ink active:scale-90"
+              className="flex h-12 w-12 items-center justify-center rounded-full text-ash transition-all hover:bg-chalk hover:text-ink active:scale-90"
             >
               <PlusIcon size={15} />
             </button>

@@ -29,20 +29,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const product = await getProductBySlug(slug);
   if (!product) return {};
 
+  // The tagline alone ("Intense heat, deep flavor.") was too short to be a
+  // useful SERP snippet — pad it with the buy-intent + price context search
+  // listings need, without inventing facts not already on the page.
+  const metaDescription = `Buy ${product.name} online — ${product.tagline} Small-batch, ships within 24 hours. From ${formatPrice(defaultPrice(product))}.`;
+
   return {
     title: product.name,
-    description: product.tagline,
+    description: metaDescription,
     alternates: { canonical: `/shop/${product.slug}` },
     openGraph: {
       title: `${product.name} | ameei`,
-      description: product.tagline,
+      description: metaDescription,
       url: `/shop/${product.slug}`,
       images: [{ url: product.gallery[0].src, alt: product.gallery[0].alt }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${product.name} | ameei`,
-      description: product.tagline,
+      description: metaDescription,
       images: [product.gallery[0].src],
     },
   };
@@ -55,11 +60,18 @@ export default async function ProductPage({ params }: PageProps) {
 
   const related = await getRelatedProducts(product.slug);
 
+  // Rolling 1-year validity — re-generated on every ISR revalidation (see `revalidate` above),
+  // so this never actually goes stale in practice.
+  const priceValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     description: product.description,
+    sku: product.slug,
     image: product.gallery.map((g) => `${siteConfig.url}${g.src}`),
     brand: { "@type": "Brand", name: siteConfig.name },
     offers: {
@@ -67,7 +79,16 @@ export default async function ProductPage({ params }: PageProps) {
       url: `${siteConfig.url}/shop/${product.slug}`,
       priceCurrency: "USD",
       price: defaultPrice(product),
+      priceValidUntil,
       availability: "https://schema.org/InStock",
+      // "we do not accept returns" (perishable goods) — see product.shipping / SHIPPING_DEFAULT.
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+      },
+      // shippingDetails intentionally omitted: Google expects a real shippingRate,
+      // and there's no shipping-cost data in the product model to source it from —
+      // add once a real rate/destination is available rather than inventing one.
     },
   };
 
@@ -97,13 +118,13 @@ export default async function ProductPage({ params }: PageProps) {
       />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Gallery */}
-        <div className="animate-fade-up lg:col-span-7">
+        {/* Gallery — ordered after details on mobile so price/CTA aren't buried below a full-screen gallery */}
+        <div className="animate-fade-up order-2 lg:order-none lg:col-span-7">
           <ProductGallery images={product.gallery} />
         </div>
 
         {/* Details */}
-        <div className="flex flex-col pt-6 lg:col-span-5 lg:pl-6 lg:pt-0">
+        <div className="order-1 flex flex-col pt-6 lg:order-none lg:col-span-5 lg:pl-6 lg:pt-0">
           {/* Breadcrumbs */}
           <nav
             aria-label="Breadcrumb"
