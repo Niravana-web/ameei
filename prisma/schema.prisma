@@ -44,3 +44,33 @@ model Order {
 
   @@index([userId])
 }
+
+/// A completed Studio build — the recipe, not a line item. Quantity lives on the
+/// cart line, so one mix can be ordered any number of times. No relations: house
+/// style here is JSON-in-TEXT with slugs as soft keys (see Product/Order above).
+model CustomMix {
+  id             String @id @default(cuid())
+  /// Share code: Crockford base32, uppercase, 8 chars. node:crypto, never Math.random.
+  code           String @unique @db.VarChar(16)
+  /// The Product this build attaches to (STUDIO_PRODUCT_SLUG). No FK, by convention.
+  productSlug    String
+  /// Pack size label — must match both a Product.weights[].label and a STUDIO_SIZES[].label.
+  weight         String
+  /// JSON: { weight, nuts[], cereals[], extras[], spice, salt }, canonically sorted.
+  selection      String @db.Text
+  /// describeMix() output, denormalized so a later relabel can't rewrite history.
+  summary        String @db.Text
+  /// Quote at build time. AUDIT AND DISPLAY ONLY — checkout re-prices from studio.ts.
+  priceCents     Int
+  /// STUDIO_PRICING_VERSION when built; lets a shared build warn that prices moved.
+  pricingVersion Int    @default(1)
+  /// sha256(canonicalMixKey) — identical builds collapse to one row and one code.
+  fingerprint    String @unique @db.VarChar(64)
+  /// Clerk id of the FIRST builder. Dedupe means this is not ownership — derive
+  /// "my mixes" from Order.items instead. Nullable: anonymous builds are allowed.
+  userId         String?
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@index([productSlug, createdAt])
+}

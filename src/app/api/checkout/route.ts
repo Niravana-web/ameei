@@ -1,10 +1,33 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { rowToProduct } from "@/lib/catalog";
-import { priceCart, type CheckoutItem } from "@/lib/checkout";
+import { getMixRowsByCodes, toResolvedMix } from "@/lib/mixes";
+import { priceCart, type CheckoutItem, type ResolvedMix } from "@/lib/checkout";
 import { siteConfig } from "@/lib/site";
+
+// Cart lines are untrusted input straight from localStorage. Shape them before
+// they reach Prisma — nothing here is injectable, but an unbounded array is a
+// free way to make us do thousands of lookups per request.
+const bodySchema = z.object({
+  items: z
+    .array(
+      z.object({
+        slug: z.string().regex(/^[a-z0-9-]+$/).max(80),
+        weight: z.string().max(16),
+        qty: z.number().int(),
+        mixCode: z.string().regex(/^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{6,16}$/).optional(),
+      }),
+    )
+    .max(50),
+});
+
+/** S3 uploads are already absolute; seeded images are site-relative. */
+function absoluteImage(base: string, src: string): string {
+  return /^https?:\/\//.test(src) ? src : `${base}${src}`;
+}
 
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -14,8 +37,11 @@ export async function POST(req: Request) {
 
   let items: CheckoutItem[];
   try {
-    const body = await req.json();
-    items = Array.isArray(body?.items) ? body.items : [];
+    const parsed = bodySchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    }
+    items = parsed.data.items;
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -30,9 +56,22 @@ export async function POST(req: Request) {
   });
   const catalog = new Map(rows.map((r) => [r.slug, rowToProduct(r)]));
 
+  // Studio builds: load each referenced mix and RE-PRICE it against the currently
+  // deployed table. A mix that no longer validates is left out of the map so
+  // priceCart produces the customer-facing "rebuild it" error.
+  const codes = [...new Set(items.map((i) => i.mixCode).filter((c): c is string => !!c))];
+  const mixes = new Map<string, ResolvedMix>();
+  for (const row of await getMixRowsByCodes(codes)) {
+    try {
+      mixes.set(row.code, toResolvedMix(row));
+    } catch (e) {
+      console.warn(`Skipping unusable custom mix ${row.code}:`, e);
+    }
+  }
+
   let lines;
   try {
-    lines = priceCart(catalog, items);
+    lines = priceCart(catalog, mixes, items);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Could not price your cart." },
@@ -52,11 +91,20 @@ export async function POST(req: Request) {
           currency: "usd",
           unit_amount: l.unitPrice,
           product_data: {
+            // Keep the name short — Stripe truncates, and folding the whole
+            // ingredient list in here makes the checkout page look broken. The
+            // selections go in `description`, which Stripe renders beneath it.
             name: `${l.name} — ${l.weight}`,
-            images: [`${base}${l.image}`],
+            ...(l.mixSummary ? { description: l.mixSummary.slice(0, 500) } : {}),
+            images: [absoluteImage(base, l.image)],
+            // Lets support recover a build from the Stripe dashboard alone.
+            ...(l.mixCode ? { metadata: { mixCode: l.mixCode } } : {}),
           },
         },
       })),
+      ...(codes.length
+        ? { metadata: { mixCodes: codes.join(",").slice(0, 500) } }
+        : {}),
       shipping_address_collection: {
         allowed_countries: ["US", "CA", "GB", "IN", "AU"],
       },

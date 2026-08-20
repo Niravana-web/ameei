@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/catalog";
 import { getCategoryLabel, defaultPrice } from "@/lib/products";
+import { STUDIO_PRODUCT_SLUG } from "@/lib/studio";
 import { siteConfig, formatPrice } from "@/lib/site";
 import { Container, Badge } from "@/components/ui/primitives";
 import { ChevronRightIcon, FlameIcon } from "@/components/ui/icons";
@@ -173,7 +174,22 @@ export default async function ProductPage({ params }: PageProps) {
           </p>
 
           <div className="animate-fade-up delay-4">
-            <PurchasePanel product={product} />
+            {/* The build-your-own SKU has no fixed recipe — its price depends on
+                what you pick, so it sends you to the Studio instead of a weight
+                selector. Everything else on this page still applies. */}
+            {product.slug === STUDIO_PRODUCT_SLUG ? (
+              <Link
+                href="/studio"
+                className="btn-spice group relative mb-6 block w-full overflow-hidden rounded-full bg-crimson py-3.5 text-center font-body text-label-caps uppercase tracking-widest text-white shadow-lg transition-all duration-300 hover:shadow-spice-lg"
+              >
+                <span className="relative z-10">
+                  Build your mix — from {formatPrice(defaultPrice(product))}
+                </span>
+                <span className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10" />
+              </Link>
+            ) : (
+              <PurchasePanel product={product} />
+            )}
             <ProductAccordion product={product} />
           </div>
         </div>

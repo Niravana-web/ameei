@@ -7,9 +7,10 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx src/lib/checkout.test.ts && tsx src/lib/image.test.ts",
+    "test": "tsx src/lib/checkout.test.ts && tsx src/lib/image.test.ts && tsx src/lib/studio.test.ts",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "db:reseed": "tsx prisma/seed.ts --prune",
     "db:studio": "prisma studio"
   },
   "prisma": {

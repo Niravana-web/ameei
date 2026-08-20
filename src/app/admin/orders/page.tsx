@@ -9,6 +9,8 @@ interface OrderItem {
   weight: string;
   qty: number;
   unitPrice: number;
+  mixCode?: string;
+  mixSummary?: string;
 }
 
 export default async function AdminOrdersPage() {
@@ -59,6 +61,11 @@ export default async function AdminOrdersPage() {
                   {items.map((it, i) => (
                     <li key={i}>
                       {it.qty} × {it.name} ({it.weight}) — {formatPrice(it.unitPrice)}
+                      {it.mixSummary && (
+                        <span className="block text-ink/50">
+                          {it.mixSummary} · mix {it.mixCode}
+                        </span>
+                      )}
                     </li>
                   ))}
                 </ul>

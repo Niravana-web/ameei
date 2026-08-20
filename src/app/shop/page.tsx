@@ -19,6 +19,10 @@ export const metadata: Metadata = {
 
 export default async function ShopPage() {
   const products = await getAllProducts();
+  // ponytail: this was a hardcoded 8.5, which silently went stale the moment the
+  // catalog changed. Derive it — the cheapest pack we actually sell, not a guess.
+  const allPrices = products.flatMap((p) => p.weights.map((w) => w.price));
+  const fromPrice = allPrices.length ? Math.min(...allPrices) : 0;
 
   const itemListJsonLd = {
     "@context": "https://schema.org",
@@ -73,7 +77,7 @@ export default async function ShopPage() {
             </h1>
             <p className="animate-fade-up delay-2 font-display text-editorial italic text-ink/80">
               Ancestral crunches with uncompromising spice blends. From{" "}
-              {formatPrice(8.5)}.
+              {formatPrice(fromPrice)}.
             </p>
           </div>
         </div>

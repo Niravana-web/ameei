@@ -14,6 +14,9 @@ export async function GET() {
 ## Shop
 ${shopLines}
 
+## Build your own
+- [Studio](${siteConfig.url}/studio): Choose your own nuts, cereals, extras, spice level and salt level; blended to order.
+
 ## About
 - [Heritage](${siteConfig.url}/heritage): The story of ${siteConfig.name}'s five-generation family recipes.
 

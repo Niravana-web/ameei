@@ -13,6 +13,7 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: "Shop", href: "/shop" },
+  { label: "Studio", href: "/studio" },
   { label: "Spices", href: "/spices" },
   { label: "Heritage", href: "/heritage" },
   { label: "Journal", href: "/journal" },

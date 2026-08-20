@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useUser, SignInButton } from "@clerk/nextjs";
-import { useCart } from "@/lib/cart";
+import { useCart, cartLineKey } from "@/lib/cart";
 import { formatPrice } from "@/lib/site";
 import { Container } from "@/components/ui/primitives";
 import { PlusIcon, MinusIcon } from "@/components/ui/icons";
@@ -23,7 +23,12 @@ export default function CartPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: items.map((i) => ({ slug: i.slug, weight: i.weight, qty: i.qty })),
+          items: items.map((i) => ({
+            slug: i.slug,
+            weight: i.weight,
+            qty: i.qty,
+            ...(i.mixCode ? { mixCode: i.mixCode } : {}),
+          })),
         }),
       });
       const data = await res.json();
@@ -55,11 +60,11 @@ export default function CartPage() {
           <ul className="space-y-4">
             {items.map((it) => (
               <li
-                key={`${it.slug}__${it.weight}`}
+                key={cartLineKey(it)}
                 className="flex gap-4 rounded-xl border border-ink/10 bg-white/70 p-3"
               >
                 <Link
-                  href={`/shop/${it.slug}`}
+                  href={it.mixCode ? `/studio/${it.mixCode}` : `/shop/${it.slug}`}
                   className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-chalk"
                 >
                   <Image src={it.image} alt={it.name} fill sizes="80px" className="object-cover" />
@@ -67,10 +72,18 @@ export default function CartPage() {
                 <div className="flex flex-1 flex-col justify-between">
                   <div className="flex justify-between gap-3">
                     <div>
-                      <Link href={`/shop/${it.slug}`} className="font-display text-headline-md text-ink hover:text-crimson">
+                      <Link
+                        href={it.mixCode ? `/studio/${it.mixCode}` : `/shop/${it.slug}`}
+                        className="font-display text-headline-md text-ink hover:text-crimson"
+                      >
                         {it.name}
                       </Link>
-                      <p className="font-body text-body-sm text-ash">{it.weight}</p>
+                      <p className="font-body text-body-md text-ash">{it.weight}</p>
+                      {it.mixSummary && (
+                        <p className="mt-0.5 max-w-md font-body text-body-md leading-snug text-ash/80">
+                          {it.mixSummary}
+                        </p>
+                      )}
                     </div>
                     <span className="font-body text-body-lg font-bold text-crimson">
                       {formatPrice(it.unitPrice * it.qty)}
@@ -81,7 +94,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         aria-label="Decrease quantity"
-                        onClick={() => setQty(it.slug, it.weight, it.qty - 1)}
+                        onClick={() => setQty(it, it.qty - 1)}
                         className="flex h-7 w-7 items-center justify-center rounded-full text-ash hover:bg-chalk hover:text-ink"
                       >
                         <MinusIcon size={14} />
@@ -90,7 +103,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         aria-label="Increase quantity"
-                        onClick={() => setQty(it.slug, it.weight, it.qty + 1)}
+                        onClick={() => setQty(it, it.qty + 1)}
                         className="flex h-7 w-7 items-center justify-center rounded-full text-ash hover:bg-chalk hover:text-ink"
                       >
                         <PlusIcon size={14} />
@@ -98,7 +111,7 @@ export default function CartPage() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => remove(it.slug, it.weight)}
+                      onClick={() => remove(it)}
                       className="font-body text-body-sm text-ash hover:text-crimson"
                     >
                       Remove

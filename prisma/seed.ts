@@ -1,5 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+// Relative, not "@/" — seed.ts runs under bare tsx and has never relied on the
+// tsconfig path alias. studio.ts is dependency-free, so it imports cleanly.
+import {
+  STUDIO_DEFAULT_SIZE,
+  STUDIO_PRODUCT_SLUG,
+  STUDIO_SIZES,
+  priceMix,
+  spiceLevelOf,
+  type MixSelection,
+} from "../src/lib/studio";
 
 process.loadEnvFile(".env"); // tsx doesn't auto-load .env
 const prisma = new PrismaClient({
@@ -9,17 +19,20 @@ const prisma = new PrismaClient({
 const SHIPPING_DEFAULT =
   "Ships within 24 hours. Due to the perishable nature of our products, we do not accept returns. If there is an issue with your order, please contact our spice masters.";
 
-// price = base price at defaultWeight; pricesForWeights() below derives the rest.
+/**
+ * Every product in the range is an American Healthy Mix — a named recipe drawn
+ * from the same ingredient set the Studio offers. `recipe` is that recipe, and
+ * per-size prices are derived from it with the SAME priceMix() the Studio uses,
+ * so a preset always costs exactly what building it by hand would cost.
+ */
 type Seed = {
   slug: string;
   name: string;
   tagline: string;
   description: string;
-  price: number;
-  weights: string[];
-  defaultWeight: string;
+  /** Selection minus the pack size; prices are computed at each STUDIO_SIZES entry. */
+  recipe: Omit<MixSelection, "weight">;
   category: string;
-  spiceLevel: number;
   badge?: string;
   image: { src: string; alt: string };
   gallery: { src: string; alt: string }[];
@@ -28,235 +41,299 @@ type Seed = {
   featured?: boolean;
 };
 
+// ponytail: photography for the new range doesn't exist yet. These point at
+// existing files in public/images/products so nothing 404s on the shop grid, the
+// PDP, or the Stripe checkout page. Replace via /admin when real shots land.
 const SEED: Seed[] = [
   {
-    slug: "spicy-crunch-mix",
-    name: "Spicy Crunch Mix",
-    tagline: "Intense heat, deep flavor.",
+    slug: STUDIO_PRODUCT_SLUG,
+    name: "Build Your Own Mix",
+    tagline: "Your mix, your rules.",
     description:
-      "What is Spicy Crunch Mix? It's ameei's fieriest snack — a bold blend of roasted peanuts, crisp gram-flour sev, and Guntur red chili, built for people who treat heat as an art form rather than an accident. We toast plump peanuts slow, then fold in cumin, black pepper, and a hit of tangy amchur (dried mango powder) that cuts through the burn just enough to pull you back for another handful. Everything is roasted in cold-pressed mustard oil, never fried, so the crunch stays honest while the spice stays loud. It's the mix that started the ameei name, the one people request by handful rather than by bag. Pour it into a bowl before guests arrive or eat it straight from the pouch at the counter. Either way, expect a complex symphony of smoke, crunch, and a lingering crimson glow that lasts well past the first bite.",
-    price: 12,
-    weights: ["150g", "300g", "500g"],
-    defaultWeight: "300g",
+      "What is Build Your Own Mix? It's the whole American Healthy Mix range handed over to you. Start with peanuts, cashews, or almonds — take one, take all three. Add the cereals that carry the crunch: cornflakes, wheat checks, rice checks. Then decide how far you want to go with raisins, coconut flakes, rice flakes, pita chips, press, and pumpkin chips. Set your heat anywhere from no spice to extra hot, and your salt from none at all to just enough. Nothing is fried, everything is roasted, and the bag is blended the day it ships. Most people build one mix for the desk drawer and a second, hotter one for the weekend. Open the Studio, move a few switches, and watch the price update as you go — no guessing, no surprises at checkout.",
+    recipe: { nuts: [], cereals: [], extras: [], spice: "medium-spice", salt: "less-salt" },
     category: "savory-mixes",
-    spiceLevel: 3,
+    badge: "NEW",
+    featured: true,
+    image: {
+      src: "/images/products/hero-chivda-bowl.jpg",
+      alt: "An overflowing bowl of golden snack mix surrounded by loose nuts and cereal pieces on a warm linen surface",
+    },
+    gallery: [
+      {
+        src: "/images/products/hero-chivda-bowl.jpg",
+        alt: "An overflowing bowl of golden snack mix surrounded by loose nuts and cereal pieces on a warm linen surface",
+      },
+      {
+        src: "/images/products/spicy-crunch-detail-1.jpg",
+        alt: "Close-up of whole spices and chili flakes scattered across a dark textured surface",
+      },
+      {
+        src: "/images/products/spicy-crunch-main.jpg",
+        alt: "Snack mix in an elegant glass bowl catching warm afternoon light",
+      },
+    ],
+    ingredients:
+      "Whatever you choose: Peanuts, Cashews, Almonds, Cornflakes, Wheat Checks, Rice Checks, Raisins, Coconut Flakes, Rice Flakes, Pita Chips, Press, Pumpkin Chips, plus your chosen spice and salt levels. 100% natural, no artificial colors or preservatives.",
+    nutrition:
+      "Allergens depend on your selection. Nut and cereal options are packed in a facility that handles peanuts, tree nuts, wheat, and coconut.",
+  },
+  {
+    slug: "straight-shooter",
+    name: "The Straight Shooter",
+    tagline: "No heat, no fuss, all crunch.",
+    description:
+      "What is The Straight Shooter? It's the mix for people who came here for the crunch, not the burn. Roasted peanuts and almonds do the heavy lifting, cornflakes and rice checks keep every handful light, and a scatter of raisins gives it just enough sweetness to keep going. There's no chili in it at all, and the salt is dialled well back — enough to taste the roast, never enough to make you reach for a glass of water. It's the bag that survives a road trip with kids in the car, the one you can leave on a shared desk without a warning label. Everything is roasted rather than fried, so the texture holds up for weeks after the pouch is opened. Start here if you're new to the range, then work your way up the heat ladder at your own pace.",
+    recipe: {
+      nuts: ["peanuts", "almonds"],
+      cereals: ["cornflakes", "rice-checks"],
+      extras: ["raisins"],
+      spice: "no-spice",
+      salt: "less-salt",
+    },
+    category: "savory-mixes",
+    image: {
+      src: "/images/products/cornflakes-mix.jpg",
+      alt: "Golden roasted cornflakes and whole almonds tumbling from a rustic ceramic bowl",
+    },
+    gallery: [
+      {
+        src: "/images/products/cornflakes-mix.jpg",
+        alt: "Golden roasted cornflakes and whole almonds tumbling from a rustic ceramic bowl",
+      },
+      {
+        src: "/images/products/upma-mix-home.jpg",
+        alt: "A pale snack mix served in a shallow bowl on a bright kitchen counter",
+      },
+    ],
+    ingredients:
+      "Roasted Peanuts, Roasted Almonds, Cornflakes, Rice Checks, Raisins, Sea Salt, Cold-Pressed Sunflower Oil. 100% natural, no artificial colors or preservatives.",
+    nutrition:
+      "Contains Peanuts and Tree Nuts (Almonds). Manufactured in a facility that also processes wheat and coconut.",
+  },
+  {
+    slug: "everyday-medium",
+    name: "Everyday Medium",
+    tagline: "The one you'll finish first.",
+    description:
+      "What is Everyday Medium? It's the middle of the range and, predictably, the one that empties fastest. Peanuts and cashews are roasted slow until the sugars turn, then folded through cornflakes and wheat checks with raisins and pita chips for a bit of structure. The spice sits right where most people actually want it — warm across the tongue, gone by the time you reach for the next handful. Salt is deliberately restrained; the point is to taste the cashew, not the seasoning. This is the mix that goes in the pantry and gets refilled without anyone discussing it, the one that turns up in a bowl when people come over and disappears before the second round of drinks. If you only ever order one bag from us, the odds are good it ends up being this one.",
+    recipe: {
+      nuts: ["peanuts", "cashews"],
+      cereals: ["cornflakes", "wheat-checks"],
+      extras: ["raisins", "pita-chips"],
+      spice: "medium-spice",
+      salt: "less-salt",
+    },
+    category: "savory-mixes",
     badge: "BESTSELLER",
     featured: true,
     image: {
       src: "/images/products/spicy-crunch-mix.jpg",
-      alt: "Spicy crunch mix with golden cornflakes and crimson-dusted peanuts spilling from a rustic ceramic bowl",
+      alt: "Snack mix of golden cornflakes and spice-dusted peanuts spilling from a rustic ceramic bowl",
     },
     gallery: [
-      { src: "/images/products/spicy-crunch-main.jpg", alt: "Premium spicy snack mix in an elegant glass bowl with crimson and amber tones" },
-      { src: "/images/products/spicy-crunch-detail-1.jpg", alt: "Close-up of red chili flakes and whole spices on a dark textured surface" },
-      { src: "/images/products/spicy-crunch-detail-2.jpg", alt: "Spicy snack mix in a sleek minimalist bowl highlighting crunch and texture" },
-      { src: "/images/products/spicy-crunch-detail-3.jpg", alt: "Spicy crunch mix served alongside a styled beverage in warm crimson light" },
+      {
+        src: "/images/products/spicy-crunch-mix.jpg",
+        alt: "Snack mix of golden cornflakes and spice-dusted peanuts spilling from a rustic ceramic bowl",
+      },
+      {
+        src: "/images/products/spicy-crunch-main.jpg",
+        alt: "Premium snack mix in an elegant glass bowl with warm crimson and amber tones",
+      },
+      {
+        src: "/images/products/spicy-crunch-detail-2.jpg",
+        alt: "Close-up of a sleek minimalist bowl highlighting the crunch and texture of the mix",
+      },
+      {
+        src: "/images/products/spicy-crunch-mix-home.jpg",
+        alt: "A bowl of snack mix on a kitchen table beside a cup of coffee in morning light",
+      },
     ],
     ingredients:
-      "Roasted Peanuts, Gram Flour, Red Chili Powder (Guntur), Black Pepper, Cumin, Sea Salt, Cold-Pressed Mustard Oil, Amchur (Dry Mango Powder). 100% natural, no artificial colors or preservatives.",
+      "Roasted Peanuts, Roasted Cashews, Cornflakes, Wheat Checks, Raisins, Pita Chips, Red Chili, Black Pepper, Cumin, Sea Salt, Cold-Pressed Sunflower Oil. 100% natural, no artificial colors or preservatives.",
     nutrition:
-      "Contains Peanuts. Manufactured in a facility that also processes tree nuts. High in protein, bold in flavor.",
+      "Contains Peanuts, Tree Nuts (Cashews), and Wheat. Manufactured in a facility that also processes coconut.",
   },
   {
-    slug: "nilon-poha-chivda",
-    name: "Nilon Poha Chivda",
-    tagline: "Light, airy, subtly sweet.",
-    description:
-      "What is Nilon Poha Chivda? It's a light, savory snack made from flattened rice (poha) roasted until paper-thin and whisper-crisp, then tossed with golden fried chana dal, fresh curry leaves, raisins, cashews, and a gentle dusting of turmeric. Unlike heavier fried mixtures, poha chivda is roasted rather than deep-fried, which keeps it naturally gluten-free and easy on the stomach without losing any of its signature crunch. The turmeric gives it a warm golden color, the curry leaves add a fragrant background note, and the raisins bring a small pocket of sweetness between bites of salt and spice. It's the mildest member of the ameei family — spice level one out of three — which makes it the mix people reach for when they want flavor without fire, whether that's an afternoon snack, a topping for yogurt, or the crunchy layer in a quick homemade chaat. Never boring, just gentler.",
-    price: 10.5,
-    weights: ["150g", "300g", "500g"],
-    defaultWeight: "300g",
-    category: "savory-mixes",
-    spiceLevel: 1,
-    featured: true,
-    image: { src: "/images/products/poha-chivda.jpg", alt: "Flattened rice poha chivda with curry leaves and cashews on a dark polished surface" },
-    gallery: [
-      { src: "/images/products/poha-chivda.jpg", alt: "Flattened rice poha chivda with curry leaves and cashews on a dark polished surface" },
-      { src: "/images/products/poha-chivda-home.jpg", alt: "Poha chivda served in a minimalist matte black bowl with golden fried dal" },
-    ],
-    ingredients:
-      "Flattened Rice (Poha), Chana Dal, Curry Leaves, Turmeric, Raisins, Cashews, Sea Salt, Cold-Pressed Groundnut Oil. 100% natural, no artificial colors or preservatives.",
-    nutrition:
-      "Contains Cashews. Manufactured in a facility that also processes peanuts and tree nuts. Light, airy, naturally gluten-free.",
-  },
-  {
-    slug: "upma-mix",
-    name: "Upma Mix",
-    tagline: "Classic comfort, spiced right.",
-    description:
-      "What is Upma Mix? It's a ready-in-minutes version of upma, the coarse roasted semolina (rava) breakfast dish eaten across South India for generations, pre-blended with mustard seeds, urad dal, dried red chilies, curry leaves, and asafoetida so all that's left to do is add hot water or milk and stir. The semolina is roasted until golden before packing, which is what gives upma its nutty base flavor and lets the mustard seeds crackle the moment they hit a hot pan. Medium on the ameei spice scale, it sits between comfort food and genuine heat: enough dried chili to wake you up, not so much that it overwhelms breakfast. Traditionally served with a squeeze of lemon, chopped vegetables, or a side of chutney, it's the dish generations of households have relied on when there's no time to cook from scratch but no interest in skipping a real breakfast either.",
-    price: 14,
-    weights: ["300g", "500g"],
-    defaultWeight: "300g",
-    category: "savory-mixes",
-    spiceLevel: 2,
-    badge: "NEW",
-    featured: true,
-    image: { src: "/images/products/upma-mix.jpg", alt: "Golden-brown semolina upma mix in a black stone bowl surrounded by dried red chilies and mustard seeds" },
-    gallery: [
-      { src: "/images/products/upma-mix.jpg", alt: "Golden-brown semolina upma mix in a black stone bowl surrounded by dried red chilies and mustard seeds" },
-      { src: "/images/products/upma-mix-home.jpg", alt: "Upma mix ingredients arranged geometrically — semolina, mustard seeds, urad dal, and dried chilies" },
-    ],
-    ingredients:
-      "Roasted Semolina (Rava), Mustard Seeds, Urad Dal, Chana Dal, Dried Red Chilies, Curry Leaves, Asafoetida, Sea Salt. 100% natural, no artificial colors or preservatives.",
-    nutrition:
-      "Contains Wheat (Gluten). Manufactured in a facility that also processes peanuts and tree nuts.",
-  },
-  {
-    slug: "masala-peanuts",
-    name: "Masala Peanuts",
-    tagline: "Crimson-coated and dangerously good.",
-    description:
-      "What is Masala Peanuts? It's ameei's take on the classic Indian bar snack: plump peanuts coated in a fiery gram-flour crust, roasted rather than fried, until they turn a deep crimson and shatter with a satisfying crunch. Garlic, black salt, and cumin sit inside that crust alongside red chili powder, all bound together with cold-pressed mustard oil instead of the deep-fried batter most masala peanuts rely on, so the flavor stays sharp without the greasy aftertaste. Spice level three out of three makes this one of the hotter mixes in the range, closer to a bar snack built for chili lovers than a mild afternoon nibble. It pairs naturally with a cold drink, works as a standalone bowl at a gathering, or gets crushed over a quick chaat for extra crunch and heat. Most people don't stop at one handful, and the crust is exactly why.",
-    price: 9.5,
-    weights: ["150g", "300g"],
-    defaultWeight: "150g",
-    category: "roasted-nuts",
-    spiceLevel: 3,
-    image: { src: "/images/products/masala-peanuts.jpg", alt: "Deep crimson spiced roasted peanuts piled on charred parchment with flakes of sea salt" },
-    gallery: [
-      { src: "/images/products/masala-peanuts.jpg", alt: "Deep crimson spiced roasted peanuts piled on charred parchment with flakes of sea salt" },
-    ],
-    ingredients:
-      "Peanuts, Gram Flour, Red Chili Powder, Garlic, Black Salt, Cumin, Cold-Pressed Mustard Oil. 100% natural, no artificial colors or preservatives.",
-    nutrition: "Contains Peanuts. Manufactured in a facility that also processes tree nuts. High in protein.",
-  },
-  {
-    slug: "roasted-cornflakes-mix",
-    name: "Roasted Cornflakes Mix",
-    tagline: "Golden, geometric, gone too fast.",
-    description:
-      "What is Roasted Cornflakes Mix? It's a savory twist on an everyday breakfast staple: crisp golden cornflakes roasted alongside peanuts and raisins, then dusted with turmeric, curry leaves, and red chili powder for a saffron-warm, medium-heat finish. The cornflakes keep their sharp, geometric crunch through roasting, which is what separates this mix from softer namkeen blends, while the raisins add small bursts of sweetness that offset the chili. It sits at spice level two of three, so it has real warmth without tipping into fire-mix territory, making it an easy entry point for people who find the hotter ameei blends too much. Cornflakes mixtures like this one are a common tea-time snack across India, served in small bowls alongside chai, and this version keeps that tradition while roasting rather than frying for a lighter, naturally gluten-free result you can hear crackle from across the room.",
-    price: 11,
-    weights: ["150g", "300g", "500g"],
-    defaultWeight: "300g",
-    category: "savory-mixes",
-    spiceLevel: 2,
-    image: { src: "/images/products/cornflakes-mix.jpg", alt: "Golden roasted cornflake mix spilling from a glass jar onto a rough slate block" },
-    gallery: [
-      { src: "/images/products/cornflakes-mix.jpg", alt: "Golden roasted cornflake mix spilling from a glass jar onto a rough slate block" },
-    ],
-    ingredients:
-      "Cornflakes, Peanuts, Raisins, Curry Leaves, Turmeric, Red Chili Powder, Sea Salt, Cold-Pressed Groundnut Oil. 100% natural, no artificial colors or preservatives.",
-    nutrition: "Contains Peanuts. Manufactured in a facility that also processes tree nuts. Naturally gluten-free.",
-  },
-  {
-    slug: "sev-mamra",
-    name: "Sev Mamra",
-    tagline: "Street-corner classic, done right.",
-    description:
-      "What is Sev Mamra? It's a street-corner classic built from two simple ingredients: featherlight puffed rice (mamra) layered with thin, golden chickpea-flour noodles (sev), finished with a dusting of red chili powder and turmeric. It's one of the mildest mixes in the ameei range at spice level one, prized less for heat and more for texture — the puffed rice practically dissolves on the tongue while the sev holds a persistent, delicate crunch. This combination is a fixture of roadside snack stalls across India, usually eaten straight from a paper cone, and its appeal has always been how little it weighs while still filling a bowl. Because it's roasted rather than fried and kept simple, sev mamra stays crisp for longer than most bhel-style mixes and works equally well eaten on its own, folded into a quick chaat with onions and chutney, or scattered over yogurt for crunch.",
-    price: 8.5,
-    weights: ["150g", "300g"],
-    defaultWeight: "150g",
-    category: "savory-mixes",
-    spiceLevel: 1,
-    image: { src: "/images/products/sev-mamra.jpg", alt: "Puffed rice and thin yellow chickpea sev dusted with red chili powder" },
-    gallery: [
-      { src: "/images/products/sev-mamra.jpg", alt: "Puffed rice and thin yellow chickpea sev dusted with red chili powder" },
-    ],
-    ingredients:
-      "Puffed Rice (Mamra), Gram Flour Sev, Red Chili Powder, Turmeric, Sea Salt, Cold-Pressed Groundnut Oil. 100% natural, no artificial colors or preservatives.",
-    nutrition: "May contain traces of Peanuts. Manufactured in a facility that also processes peanuts and tree nuts.",
-  },
-  {
-    slug: "smoked-ghost-pepper",
-    name: "Smoked Ghost Pepper",
+    slug: "extra-hot-trail",
+    name: "Extra Hot Trail",
     tagline: "Handle with respect.",
     description:
-      "What is Smoked Ghost Pepper powder? It's a single-ingredient spice made from ghost peppers (bhut jolokia) — among the hottest chilies grown in India — slow-smoked over wood and ground into a deep, vibrant red powder. Unlike blended chili powders, this one contains nothing but smoked ghost pepper, so its heat and smoke character come through undiluted; a pinch changes the direction of an entire dish, and a spoonful is genuinely not meant for casual use. Ghost pepper has historically been used in small quantities in northeastern Indian cooking, prized as much for its smoky depth as for its Scoville rating. This is the hottest blend ameei makes, and it's built for people who already know they want that kind of heat: stirred into oil for a marinade, added a pinch at a time to curries, or used sparingly to finish a dish that needs one more layer of intensity. Handle it with respect.",
-    price: 13.5,
-    weights: ["50g", "100g"],
-    defaultWeight: "50g",
-    category: "spice-blends",
-    spiceLevel: 3,
+      "What is Extra Hot Trail? It's the top of our heat ladder, built for people who treat spice as an ingredient rather than a dare. Peanuts and almonds are roasted dark, then tossed with wheat checks and rice checks and finished with pumpkin chips and pita chips for weight. The chili comes on slowly, sits at the back of the throat, and stays there — this is a long burn, not a flash. Salt is pushed up a notch to hold the heat in balance, so it eats best alongside something cold. Pack it for a hike and it'll do more work than an energy bar; leave it out at a party and you'll find out quickly who's serious. Roasted, never fried, so the crunch survives the spice. Keep a glass of something within reach on the first handful.",
+    recipe: {
+      nuts: ["peanuts", "almonds"],
+      cereals: ["wheat-checks", "rice-checks"],
+      extras: ["pita-chips", "pumpkin-chips"],
+      spice: "extra-hot",
+      salt: "some-salt",
+    },
+    category: "savory-mixes",
     badge: "NEW",
-    image: { src: "/images/products/ghost-pepper.jpg", alt: "Jar of deep red smoked ghost pepper powder with dramatic smoke effects" },
+    featured: true,
+    image: {
+      src: "/images/products/ghost-pepper.jpg",
+      alt: "A deep red, chili-dusted snack mix photographed against dramatic dark smoke",
+    },
     gallery: [
-      { src: "/images/products/ghost-pepper.jpg", alt: "Jar of deep red smoked ghost pepper powder with dramatic smoke effects" },
+      {
+        src: "/images/products/ghost-pepper.jpg",
+        alt: "A deep red, chili-dusted snack mix photographed against dramatic dark smoke",
+      },
+      {
+        src: "/images/products/spicy-crunch-detail-1.jpg",
+        alt: "Close-up of red chili flakes and whole spices on a dark textured surface",
+      },
+      {
+        src: "/images/products/spicy-crunch-detail-3.jpg",
+        alt: "Fiery snack mix served alongside a cold drink in warm crimson light",
+      },
     ],
-    ingredients: "Smoked Ghost Peppers (Bhut Jolokia). That's it. 100% natural, no anti-caking agents.",
-    nutrition: "Extremely hot. Keep away from eyes and small children. Processed in a dedicated chili facility.",
+    ingredients:
+      "Roasted Peanuts, Roasted Almonds, Wheat Checks, Rice Checks, Pita Chips, Pumpkin Chips, Red Chili, Cayenne, Black Pepper, Cumin, Sea Salt, Cold-Pressed Sunflower Oil. 100% natural, no artificial colors or preservatives.",
+    nutrition:
+      "Very hot. Contains Peanuts, Tree Nuts (Almonds), and Wheat. Manufactured in a facility that also processes coconut.",
   },
   {
-    slug: "saffron-roasted-cashews",
-    name: "Saffron Roasted Cashews",
-    tagline: "Golden warmth in every bite.",
+    slug: "the-nut-case",
+    name: "The Nut Case",
+    tagline: "All three nuts. No apologies.",
     description:
-      "What is Saffron Roasted Cashews? It's whole cashews roasted in ghee with real saffron threads, white pepper, sea salt, and a whisper of cardamom, finished in a golden-red spice coating that leans warm and buttery rather than fiery. Saffron and cashews together are a traditional pairing in Indian festive cooking, often reserved for celebrations because both ingredients are prized rather than everyday. Roasting the cashews in ghee instead of oil gives them a richer, rounder flavor, while the cardamom adds a fragrant top note that keeps the mix from tasting one-dimensionally sweet or salty. At spice level one, this is the most restrained mix ameei makes — built for moments that call for something a little luxurious rather than a fire-mix crunch. It's the snack meant for guests, for gifting, or for the evening you decide a plain bowl of cashews isn't quite enough.",
-    price: 16,
-    weights: ["150g", "300g"],
-    defaultWeight: "150g",
+      "What is The Nut Case? It's what happens when you stop compromising and take every nut on the list. Peanuts, cashews, and almonds are roasted separately — they don't cook at the same rate — then brought together with just enough cornflakes to keep the bag from being relentless, and coconut flakes for a sweet, toasted edge. The spice is medium and the salt is light, because a mix this nut-heavy doesn't need much help. It's the most protein-dense thing we make and, per handful, the most expensive to produce; there's no filler hiding in the bottom of the pouch. Good at four in the afternoon when lunch has worn off, good on a plane, good crushed over a bowl of yoghurt if you're feeling inventive. Order it when you want the nuts to be the point rather than the garnish.",
+    recipe: {
+      nuts: ["peanuts", "cashews", "almonds"],
+      cereals: ["cornflakes"],
+      extras: ["coconut-flakes"],
+      spice: "medium-spice",
+      salt: "less-salt",
+    },
     category: "roasted-nuts",
-    spiceLevel: 1,
-    image: { src: "/images/products/saffron-cashews.jpg", alt: "Whole cashews coated in a golden-red saffron spice blend on dark slate" },
+    badge: "BESTSELLER",
+    image: {
+      src: "/images/products/saffron-cashews.jpg",
+      alt: "Golden roasted cashews and almonds piled in a small ceramic dish under warm light",
+    },
     gallery: [
-      { src: "/images/products/saffron-cashews.jpg", alt: "Whole cashews coated in a golden-red saffron spice blend on dark slate" },
+      {
+        src: "/images/products/saffron-cashews.jpg",
+        alt: "Golden roasted cashews and almonds piled in a small ceramic dish under warm light",
+      },
+      {
+        src: "/images/products/masala-peanuts.jpg",
+        alt: "Spice-coated roasted peanuts scattered across a dark stone surface",
+      },
     ],
     ingredients:
-      "Cashews, Ghee, Saffron, White Pepper, Sea Salt, a whisper of Cardamom. 100% natural, no artificial colors or preservatives.",
-    nutrition: "Contains Cashews (Tree Nuts) and Dairy (Ghee). Manufactured in a facility that also processes peanuts.",
+      "Roasted Peanuts, Roasted Cashews, Roasted Almonds, Cornflakes, Coconut Flakes, Red Chili, Black Pepper, Cumin, Sea Salt, Cold-Pressed Sunflower Oil. 100% natural, no artificial colors or preservatives.",
+    nutrition:
+      "High in protein. Contains Peanuts, Tree Nuts (Cashews, Almonds), and Coconut. Manufactured in a facility that also processes wheat.",
   },
   {
-    slug: "heritage-blend",
-    name: "The Heritage Blend",
-    tagline: "Five generations in one jar.",
+    slug: "featherweight",
+    name: "Featherweight",
+    tagline: "Cereal-forward and easy.",
     description:
-      "What is The Heritage Blend? It's ameei's founding family masala — a complex, dark red mix of fourteen spices, including coriander, cumin, dried red chilies, fenugreek, mustard seeds, turmeric, cinnamon, clove, cardamom, star anise, bay leaf, dry ginger, and amchur, roasted and ground in a specific sequence that has stayed unchanged for five generations. Where most of ameei's other products are ready-to-eat snacks, the Heritage Blend is a cooking spice: the same masala used as the base for the family's original recipes, meant to be stirred into oil at the start of a dish rather than eaten from the bag. The order in which the spices are roasted matters as much as the list itself, since roasting sequence changes how the oils release and how the final blend tastes once it hits a hot pan. It's the one product in the range that isn't really a snack at all — it's the backbone every other ameei recipe is built on.",
-    price: 12.5,
-    weights: ["100g", "200g"],
-    defaultWeight: "100g",
-    category: "spice-blends",
-    spiceLevel: 2,
-    badge: "BESTSELLER",
-    image: { src: "/images/products/heritage-blend.jpg", alt: "Macro shot of a complex dark red spice blend with visible seeds and textures" },
+      "What is Featherweight? It's the nut-free corner of the range, and the lightest thing we make. All three cereals go in — cornflakes, wheat checks, rice checks — along with rice flakes, raisins, and coconut flakes, and that's the whole story. No chili, no added salt, nothing to get in the way. What you're left with is a mix that's genuinely airy: sweet in places from the raisins, toasty from the coconut, and crisp everywhere else. It's the bag we send to households with a nut allergy in the mix, and the one people reach for late at night when they want something to eat rather than something to survive. Roasted in small batches and packed the same week. Because there's no oil-heavy nut in it, it's also the mix that stays crisp longest once the pouch is open.",
+    recipe: {
+      nuts: [],
+      cereals: ["cornflakes", "wheat-checks", "rice-checks"],
+      extras: ["rice-flakes", "raisins", "coconut-flakes"],
+      spice: "no-spice",
+      salt: "no-salt",
+    },
+    category: "savory-mixes",
+    image: {
+      src: "/images/products/poha-chivda.jpg",
+      alt: "A pale, airy cereal-based snack mix with raisins and coconut flakes in a wide shallow bowl",
+    },
     gallery: [
-      { src: "/images/products/heritage-blend.jpg", alt: "Macro shot of a complex dark red spice blend with visible seeds and textures" },
+      {
+        src: "/images/products/poha-chivda.jpg",
+        alt: "A pale, airy cereal-based snack mix with raisins and coconut flakes in a wide shallow bowl",
+      },
+      {
+        src: "/images/products/poha-chivda-home.jpg",
+        alt: "Light snack mix poured into a bowl on a bright kitchen worktop",
+      },
+      {
+        src: "/images/products/sev-mamra.jpg",
+        alt: "Crisp puffed cereal mix photographed close up to show its texture",
+      },
     ],
     ingredients:
-      "Coriander, Cumin, Dried Red Chilies, Black Pepper, Fenugreek, Mustard Seeds, Turmeric, Cinnamon, Clove, Cardamom, Star Anise, Bay Leaf, Dry Ginger, Amchur. 100% natural.",
-    nutrition: "No known allergens. Processed in a dedicated spice facility.",
+      "Cornflakes, Wheat Checks, Rice Checks, Rice Flakes, Raisins, Coconut Flakes, Cold-Pressed Sunflower Oil. No added salt. 100% natural, no artificial colors or preservatives.",
+    nutrition:
+      "No added salt. Nut-free recipe, but manufactured in a facility that also processes peanuts and tree nuts. Contains Wheat and Coconut.",
+  },
+  {
+    slug: "ember-and-cashew",
+    name: "Ember & Cashew",
+    tagline: "Sweet cashew, slow burn.",
+    description:
+      "What is Ember & Cashew? It's the smallest ingredient list we sell and the one that took longest to get right. Cashews and peanuts are roasted until they're properly golden, tossed with cornflakes for lift, and finished with pumpkin chips and a serious amount of chili. The cashew is what makes it work — it's sweet enough and fatty enough to carry heat that would be punishing on its own, so the burn arrives late and fades slow instead of hitting all at once. Salt stays light so nothing competes. There's no filler and nowhere for a bad nut to hide, which is why we only run it in small batches. Eat it slowly, ideally with something cold nearby, and pay attention to the second half of each handful — that's where it happens.",
+    recipe: {
+      nuts: ["peanuts", "cashews"],
+      cereals: ["cornflakes"],
+      extras: ["pumpkin-chips"],
+      spice: "extra-hot",
+      salt: "less-salt",
+    },
+    category: "roasted-nuts",
+    image: {
+      src: "/images/products/masala-peanuts.jpg",
+      alt: "Crimson-coated roasted cashews and peanuts glowing against a dark backdrop",
+    },
+    gallery: [
+      {
+        src: "/images/products/masala-peanuts.jpg",
+        alt: "Crimson-coated roasted cashews and peanuts glowing against a dark backdrop",
+      },
+      {
+        src: "/images/products/spicy-crunch-detail-3.jpg",
+        alt: "Spiced nut mix served alongside a styled beverage in warm crimson light",
+      },
+    ],
+    ingredients:
+      "Roasted Cashews, Roasted Peanuts, Cornflakes, Pumpkin Chips, Red Chili, Cayenne, Black Pepper, Sea Salt, Cold-Pressed Sunflower Oil. 100% natural, no artificial colors or preservatives.",
+    nutrition:
+      "Very hot. Contains Peanuts and Tree Nuts (Cashews). Manufactured in a facility that also processes wheat and coconut.",
   },
 ];
 
-// ponytail: every weight used to get the same flat price (a 150g and a 500g
-// pack cost identically) — a live pricing bug. Real per-SKU pricing should
-// come from the business; until then, derive a defensible per-weight price
-// from the existing base price with a modest bulk discount, so pack size
-// actually affects price. Replace with real numbers in the admin when available.
-function gramsOf(weight: string): number {
-  const match = /^(\d+)g$/.exec(weight);
-  if (!match) throw new Error(`Unrecognized weight format: ${weight}`);
-  return Number(match[1]);
+/**
+ * Per-size prices for a recipe, using the Studio's own price table, so a preset's
+ * shop price can never drift from what building the same thing costs.
+ *
+ * Since pricing is now flat per pack size, every product in the range shares one
+ * price ladder — a preset is the same bag as a custom build, just pre-decided, so
+ * charging differently for it would be incoherent. Give a preset its own numbers
+ * here only if the business genuinely wants recipe-based pricing back.
+ */
+function pricesForRecipe(recipe: Omit<MixSelection, "weight">) {
+  return STUDIO_SIZES.map((size) => ({
+    label: size.label,
+    price: priceMix({ ...recipe, weight: size.label }) / 100, // cents → USD
+  }));
 }
 
-function pricesForWeights(basePrice: number, defaultWeight: string, weights: string[]) {
-  const baseGrams = gramsOf(defaultWeight);
-  const rate = basePrice / baseGrams; // $/g at the default pack size
-  return weights.map((label) => {
-    const grams = gramsOf(label);
-    const doublingsFromDefault = Math.log(grams / baseGrams) / Math.log(2);
-    const bulkDiscount = Math.pow(0.94, doublingsFromDefault); // ~6% cheaper per-gram per size doubling
-    const raw = rate * bulkDiscount * grams;
-    return { label, price: Math.round(raw * 2) / 2 }; // nearest $0.50
-  });
-}
-
+/** STUDIO_SIZES is ordered smallest-first, so index order is size order. */
 function assertMonotonicPricing(weights: { label: string; price: number }[]) {
-  const byGrams = [...weights].sort((a, b) => gramsOf(a.label) - gramsOf(b.label));
-  for (let i = 1; i < byGrams.length; i++) {
-    if (byGrams[i].price <= byGrams[i - 1].price) {
+  for (let i = 1; i < weights.length; i++) {
+    if (weights[i].price <= weights[i - 1].price) {
       throw new Error(
-        `Weight pricing bug: ${byGrams[i].label} ($${byGrams[i].price}) is not more than ${byGrams[i - 1].label} ($${byGrams[i - 1].price})`,
+        `Weight pricing bug: ${weights[i].label} ($${weights[i].price}) is not more than ${weights[i - 1].label} ($${weights[i - 1].price})`,
       );
     }
   }
 }
 
+// Destructive, so it's opt-in: `npm run db:reseed`. An ungated prune would mean a
+// stray `npm run db:seed` wipes a catalog someone hand-curated in /admin.
+const PRUNE = process.argv.includes("--prune") || process.env.SEED_PRUNE === "1";
+
 async function main() {
   for (let i = 0; i < SEED.length; i++) {
     const s = SEED[i];
-    const weights = pricesForWeights(s.price, s.defaultWeight, s.weights);
+    const weights = pricesForRecipe(s.recipe);
     assertMonotonicPricing(weights);
     const data = {
       slug: s.slug,
@@ -264,12 +341,12 @@ async function main() {
       tagline: s.tagline,
       description: s.description,
       category: s.category,
-      spiceLevel: s.spiceLevel,
+      spiceLevel: spiceLevelOf(s.recipe.spice),
       badge: s.badge ?? null,
       image: JSON.stringify(s.image),
       gallery: JSON.stringify(s.gallery),
       weights: JSON.stringify(weights),
-      defaultWeight: s.defaultWeight,
+      defaultWeight: STUDIO_DEFAULT_SIZE,
       ingredients: s.ingredients,
       nutrition: s.nutrition,
       shipping: SHIPPING_DEFAULT,
@@ -284,6 +361,16 @@ async function main() {
     });
   }
   console.log(`Seeded ${SEED.length} products.`);
+
+  if (PRUNE) {
+    // Safe at the DB layer: Order has no FK to Product, and Order.items is a
+    // self-contained JSON snapshot, so historical orders still render.
+    const keep = SEED.map((s) => s.slug);
+    const { count } = await prisma.product.deleteMany({ where: { slug: { notIn: keep } } });
+    console.log(`Pruned ${count} products not in the seed set.`);
+  } else {
+    console.log("Skipped pruning old products. Run `npm run db:reseed` to remove them.");
+  }
 }
 
 main()
