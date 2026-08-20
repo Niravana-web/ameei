@@ -13,6 +13,8 @@ interface OrderItem {
   weight: string;
   qty: number;
   unitPrice: number;
+  mixCode?: string;
+  mixSummary?: string;
 }
 
 export default async function AccountOrdersPage() {
@@ -82,6 +84,9 @@ export default async function AccountOrdersPage() {
                   {items.map((it, i) => (
                     <li key={i}>
                       {it.qty} × {it.name} ({it.weight})
+                      {it.mixSummary && (
+                        <span className="block text-ash">{it.mixSummary}</span>
+                      )}
                     </li>
                   ))}
                 </ul>

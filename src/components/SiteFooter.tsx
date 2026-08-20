@@ -4,10 +4,10 @@ import { NewsletterForm } from "@/components/NewsletterForm";
 import { InstagramIcon } from "@/components/ui/icons";
 
 const shopLinks = [
-  { label: "Spicy Crunch Mix", href: "/shop/spicy-crunch-mix" },
-  { label: "Nilon Poha Chivda", href: "/shop/nilon-poha-chivda" },
-  { label: "Upma Mix", href: "/shop/upma-mix" },
-  { label: "Masala Peanuts", href: "/shop/masala-peanuts" },
+  { label: "Build Your Own Mix", href: "/studio" },
+  { label: "Everyday Medium", href: "/shop/everyday-medium" },
+  { label: "Extra Hot Trail", href: "/shop/extra-hot-trail" },
+  { label: "The Nut Case", href: "/shop/the-nut-case" },
 ];
 
 const legalLinks = [
