@@ -46,6 +46,6 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 
 ## Still open before spend
 - [x] web/ deployed; Subscriber table pushed to the remote MySQL; /api/newsletter returns 400 on bad email and honeypot, 405 on GET.
-- [x] First-pouch offer code FIRSTPOUCH (15% off, first order only) created in Stripe and `allow_promotion_codes` enabled in checkout (commit 6e76158). Stripe key in web/.env is TEST mode: the same coupon + code must be created in LIVE mode (or a live key configured) before real customers can use it.
+- [x] First-pouch offer code FIRSTPOUCH (15% off, first order only) created in Stripe and `allow_promotion_codes` enabled in checkout (commit 6e76158). Coupon + code also created in LIVE mode on 2026-11-16. Vercel STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET were still sk_test values: switch Production to live + live webhook secret and redeploy before real orders.
 - Reply to the July collaboration DMs (two US bloggers) with a sample offer.
 - Test the HEAT comment automation from a second account.

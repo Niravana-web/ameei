@@ -60,5 +60,5 @@ Always: reply in the first person as ameei, lowercase brand name, one short joke
 ## Set up in Business Suite on 2026-11-16
 - Automation "Heat ladder keyword DM" (Comment to message, Instagram + Messenger, ON). Keywords: heat, spicy, ladder, link, where to buy, price, order, sample, recipe. Public reply: "check your DMs, sent you the heat ladder". DM asks for their heat level and points to ameei.in.
 - Saved replies (type the shortcut in the inbox reply box): `heat`, `buy`, `ship`, `thanks`, `wholesale`. `buy` names the FIRSTPOUCH code.
-- Offer code: **FIRSTPOUCH**, 15% off, first order only, no minimum, no expiry (Stripe coupon `firstpouch15`, created 2026-11-16 in TEST mode; recreate in live mode before real orders). Checkout shows an "Add promotion code" box.
+- Offer code: **FIRSTPOUCH**, 15% off, first order only, no minimum, no expiry (Stripe coupon `firstpouch15`, created 2026-11-16 in both TEST and LIVE mode via web/scripts/make_firstpouch_code.py). Checkout shows an "Add promotion code" box.
 - Automation list: Business Suite → Inbox → Automations. Saved replies: inbox reply box → speech-bubble icon → Manage.
