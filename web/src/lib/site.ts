@@ -6,7 +6,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ameei.in",
   ogImage: "/images/products/hero-chivda-bowl.jpg",
   links: {
-    instagram: "https://instagram.com/ameei.snacks",
+    instagram: "https://instagram.com/ameei_snacks",
     tiktok: "https://tiktok.com/@ameei.snacks",
   },
 } as const;

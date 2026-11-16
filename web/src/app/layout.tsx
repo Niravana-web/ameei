@@ -67,6 +67,8 @@ export const metadata: Metadata = {
   verification: {
     other: {
       "msvalidate.01": "2AB9ADA91A9DF1F0D150B75429D518D5",
+      // Meta Business Suite domain verification for ameei.in (Niravana portfolio)
+      "facebook-domain-verification": "ljmegu34fbzizu0isj1sijohguxszz",
     },
   },
 };
@@ -128,6 +130,29 @@ export default function RootLayout({
               gtag('js', new Date());
               gtag('config', 'G-LBPQXP7TPJ');`}
           </Script>
+          {/* Meta pixel: dataset "ameei" (ID 2866828870386268) in the Niravana portfolio */}
+          <Script id="meta-pixel" strategy="afterInteractive">
+            {`!function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '2866828870386268');
+              fbq('track', 'PageView');`}
+          </Script>
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element -- tracking beacon, not content */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              alt=""
+              src="https://www.facebook.com/tr?id=2866828870386268&ev=PageView&noscript=1"
+            />
+          </noscript>
           <CartProvider>
             <SiteHeader />
             <main className="flex-1">{children}</main>

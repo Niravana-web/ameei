@@ -1,0 +1,22 @@
+[
+  [7, "back_pocket", [2, 3], null,
+   "The small kraft pouch stays completely blank: no printing, no label, no lettering at any point in the clip.",
+   {"3": "C:\\Users\\SRI\\Documents\\Wan2GP\\outputs\\ameei\\r07\\kf\\2026-11-10-07h13m37s_seed71001_A photograph, vertical, of the same Latino student.jpg"}],
+  [7, "bottom_of_bag", [3], null, null,
+   {"3": "C:\\Users\\SRI\\Documents\\Wan2GP\\outputs\\ameei\\r07\\kf\\2026-11-10-07h15m42s_seed71011_A photograph, vertical, of the same South Asian Am.jpg"}],
+  [7, "jersey_pocket", [1, 3], null,
+   "The small kraft pouch stays completely blank: no printing, no label, no lettering at any point in the clip.",
+   {"3": "C:\\Users\\SRI\\Documents\\Wan2GP\\outputs\\ameei\\r07\\kf\\2026-11-10-07h17m47s_seed71021_A photograph, vertical, of the same cyclist back o.jpg"}],
+  [8, "front_pocket", [1, 3],
+   "The same seven-year-old girl in the yellow raincoat from the first shot; she holds only the small plain kraft pouch, resealable zip top, no plastic bags, no wrappers, no other packaging.",
+   "The small kraft pouch stays completely blank: no printing, no label, no lettering at any point in the clip.",
+   null],
+  [8, "minibar", [2, 3],
+   "The same Black man in his forties in the white dress shirt from the first shot, tie loosened, leaning back in the hotel desk chair eating the glossy chili cashews from a white saucer; no plate, no spoon, no cup.",
+   "Dry food only: the glossy chili-glazed cashews and cornflakes tumble out of the pouch onto the white saucer; there is no liquid, no sauce, no pouring of anything wet.",
+   null],
+  [9, "chairlift", [1, 3], null,
+   "The small kraft pouch stays completely blank: no printing, no label, no lettering at any point in the clip.",
+   {"1": "C:\\Users\\SRI\\Documents\\Wan2GP\\outputs\\ameei\\r09\\kf\\2026-11-15-21h31m15s_seed90001_A photograph, vertical, of a white man in his twen.jpg",
+    "3": "C:\\Users\\SRI\\Documents\\Wan2GP\\outputs\\ameei\\r09\\kf\\2026-11-15-21h34m22s_seed90020_A photograph, vertical, of the same skier at the t.jpg"}]
+]

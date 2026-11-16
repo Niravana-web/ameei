@@ -74,3 +74,16 @@ model CustomMix {
   @@index([userId])
   @@index([productSlug, createdAt])
 }
+
+/// Newsletter signup captured from the site (footer by default). Email is
+/// lowercased and trimmed in the API layer before write; unique so re-subscribing
+/// is an idempotent upsert, never an error.
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique @db.VarChar(254)
+  /// Where the signup came from: "footer" | future values ("popup", "checkout", ...).
+  source    String   @default("footer") @db.VarChar(32)
+  /// Reserved for a later preference field (e.g. "mild" | "medium" | "hot").
+  heat      String?  @db.VarChar(16)
+  createdAt DateTime @default(now())
+}

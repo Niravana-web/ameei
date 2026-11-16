@@ -1,0 +1,50 @@
+/* ameei design tokens — plain CSS variables for ad templates / HTML renders.
+   Mirrors web/src/app/globals.css. Load fonts with:
+   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:wght@400;500;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet"> */
+:root {
+  --crimson: #c0162c;
+  --crimson-deep: #8b0d1e;
+  --crimson-bright: #e8192f;
+
+  --saffron: #f4a828;
+  --saffron-pale: #fde68a;
+  --terracotta: #c8622a;
+
+  --chalk: #fff8f0;
+  --ink: #1a0a0c;
+  --ash: #6b5b5d;
+  --fog: #ede3e0;
+
+  --ember: #19090b;
+  --ember-soft: #2d1b1d;
+  --ember-mist: #493436;
+  --blush: #ffb3b1;
+  --amber-glow: #ffb950;
+  --rosewood: #e0bfbd;
+
+  --success: #2d7a4f;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-accent: "Caveat", cursive;
+
+  --radius-card: 1rem;
+  --radius-photo: 1.25rem;
+  --radius-panel: 2rem;
+
+  --shadow-spice: 0 4px 24px rgba(192, 22, 44, 0.12);
+  --shadow-spice-lg: 0 20px 40px -10px rgba(192, 22, 44, 0.18);
+  --shadow-saffron-glow: 0 8px 30px rgba(244, 168, 40, 0.45);
+  --shadow-cta: 0 4px 20px rgba(139, 13, 30, 0.4);
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}

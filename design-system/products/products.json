@@ -1,0 +1,77 @@
+{
+  "$description": "Current ameei range, extracted from web/prisma/seed.ts. Photo paths are relative to design-system/. Heat ladder: no-spice < medium-spice < extra-hot.",
+  "brand": {
+    "name": "ameei",
+    "tagline": "Crunch with a little bit of spice",
+    "description": "Healthy snacks with actual flavor: small-batch roasted mixes and nuts, roasted never fried, nothing artificial. Flavor from Indian family recipes, made and shipped fresh across the US.",
+    "url": "https://www.ameei.in",
+    "social": { "instagram": "@ameei.snacks", "tiktok": "@ameei.snacks" },
+    "proof_points": ["Roasted, never fried", "Small-batch, blended the week it ships", "100% natural — no artificial colors or preservatives", "Made and shipped fresh across the US"]
+  },
+  "products": [
+    {
+      "slug": "build-your-own",
+      "name": "Build Your Own Mix",
+      "tagline": "Your mix, your rules.",
+      "spice": "your choice", "salt": "your choice",
+      "hook": "Pick nuts, cereals and extras, set heat from none to extra hot. Price updates live in the Studio.",
+      "photos": ["photography/products/hero-chivda-bowl.jpg", "photography/products/spicy-crunch-detail-1.jpg", "photography/products/spicy-crunch-main.jpg"]
+    },
+    {
+      "slug": "straight-shooter",
+      "name": "The Straight Shooter",
+      "tagline": "No heat, no fuss, all crunch.",
+      "spice": "no-spice", "salt": "less-salt",
+      "key_ingredients": ["roasted peanuts", "almonds", "cornflakes", "rice checks", "raisins"],
+      "hook": "Zero chili. The road-trip, shared-desk, kids-in-the-car bag.",
+      "photos": ["photography/products/cornflakes-mix.jpg", "photography/products/upma-mix-home.jpg"]
+    },
+    {
+      "slug": "everyday-medium",
+      "name": "Everyday Medium",
+      "tagline": "The one you'll finish first.",
+      "spice": "medium-spice", "salt": "less-salt",
+      "key_ingredients": ["roasted peanuts", "cashews", "cornflakes", "wheat checks", "raisins", "pita chips"],
+      "hook": "The best-seller. Warm across the tongue, gone by the next handful.",
+      "photos": ["photography/products/spicy-crunch-mix.jpg", "photography/products/spicy-crunch-main.jpg", "photography/products/spicy-crunch-detail-2.jpg", "photography/products/spicy-crunch-mix-home.jpg"]
+    },
+    {
+      "slug": "extra-hot-trail",
+      "name": "Extra Hot Trail",
+      "tagline": "Handle with respect.",
+      "spice": "extra-hot", "salt": "some-salt",
+      "key_ingredients": ["dark-roasted peanuts", "almonds", "wheat checks", "rice checks", "pumpkin chips", "pita chips", "red chili", "cayenne"],
+      "hook": "Top of the heat ladder. A long burn, not a flash.",
+      "photos": ["photography/products/spicy-crunch-detail-1.jpg", "photography/products/spicy-crunch-detail-3.jpg"],
+      "notes": "ghost-pepper.jpg is the web listing image but shows a generic jar with a non-ameei label — do not use it in ads."
+    },
+    {
+      "slug": "the-nut-case",
+      "name": "The Nut Case",
+      "tagline": "All three nuts. No apologies.",
+      "spice": "medium-spice", "salt": "less-salt",
+      "key_ingredients": ["peanuts", "cashews", "almonds", "coconut"],
+      "hook": "High in protein. All three nuts in one bag.",
+      "photos": ["photography/products/saffron-cashews.jpg", "photography/products/masala-peanuts.jpg"]
+    },
+    {
+      "slug": "featherweight",
+      "name": "Featherweight",
+      "tagline": "Cereal-forward and easy.",
+      "spice": "no-spice", "salt": "no-salt",
+      "key_ingredients": ["cornflakes", "wheat checks", "rice checks", "rice flakes", "raisins", "coconut flakes"],
+      "hook": "Nut-free recipe, no added salt. The lightest, crispest thing we make.",
+      "photos": ["photography/products/poha-chivda.jpg", "photography/products/poha-chivda-home.jpg", "photography/products/sev-mamra.jpg"],
+      "notes": "Nut-free recipe but made in a facility that processes nuts — never claim 'nut-free facility'."
+    },
+    {
+      "slug": "ember-and-cashew",
+      "name": "Ember & Cashew",
+      "tagline": "Sweet cashew, slow burn.",
+      "spice": "extra-hot", "salt": "less-salt",
+      "key_ingredients": ["golden-roasted cashews", "peanuts", "cornflakes", "pumpkin chips", "chili"],
+      "hook": "Shortest ingredient list we sell. The burn arrives late and fades slow.",
+      "photos": ["photography/products/masala-peanuts.jpg", "photography/products/spicy-crunch-detail-3.jpg"]
+    }
+  ]
+}
