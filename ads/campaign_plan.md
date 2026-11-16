@@ -2,7 +2,8 @@
 
 Ad account: **ameei** (ID 29800462462894336), Niravana portfolio, USD, Eastern Time. Payment method: to be added by Lokesh.
 
-## Campaign 1: "ameei · Engagement · US · Nov 2026"
+## Campaign 1: "ameei - Engagement - US profile - month 1" (DRAFT in Ads Manager, built 2026-11-16, not published)
+IDs: campaign 120251608426960361 · ad set 120251608426970361 · ads 120251608426980361 (carry_on, existing IG post) and 120251608550430361 (host_gift, uploaded video). Settings as built: Engagement → conversion location Instagram or Facebook, performance goal Instagram profile visits, highest volume, lifetime $75, 1 Dec to 31 Dec 2026 (EST), Advantage+ audience with hard controls US + min age 22, suggestions age 22-45 + interests hiking trails / KIND Healthy Snacks / snack mix, placements Instagram Reels + Facebook Reels only, pixel ameei tracked, AI-media disclosure ticked on both ads, CTA Visit Instagram profile. Not set: ad scheduling (6 am to 11 pm) because the lifetime-budget dayparting toggle was left off; add before publishing if wanted.
 - Objective: Engagement, conversion location Instagram profile / post engagement (grow @ameei_snacks).
 - Buying type: Auction. Budget: **$75 lifetime** for the ad set, 30 days (about $2.50/day; Meta paces it and can spend more on strong days). Monthly cap = total spend, no surprise overspend. Review at day 10 and day 20.
 - Special ad categories: none.
