@@ -112,7 +112,7 @@ function readForm(formData: FormData) {
 function revalidateStorefront(slug?: string) {
   revalidatePath("/");
   revalidatePath("/studio");
-  revalidatePath("/admin");
+  revalidatePath("/admin/products");
 }
 
 export type FormState = { error?: string };
@@ -141,7 +141,7 @@ export async function createProduct(
     return { error: toMessage(e) };
   }
   revalidateStorefront(data.slug);
-  redirect("/admin"); // throws NEXT_REDIRECT — must stay outside the try/catch
+  redirect("/admin/products"); // throws NEXT_REDIRECT — must stay outside the try/catch
 }
 
 export async function updateProduct(
@@ -158,7 +158,7 @@ export async function updateProduct(
     return { error: toMessage(e) };
   }
   revalidateStorefront(data.slug);
-  redirect("/admin");
+  redirect("/admin/products");
 }
 
 export async function deleteProduct(id: string) {

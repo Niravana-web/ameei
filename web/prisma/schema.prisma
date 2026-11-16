@@ -38,11 +38,28 @@ model Order {
   email           String?
   amountTotal     Int // cents
   currency        String   @default("usd")
-  status          String // "paid" | "pending" | ...
-  items           String   @db.Text // JSON: [{ slug, name, weight, qty, unitPrice }]
+  /// "pending" (checkout opened) | "paid" | "roasting" | "shipped" | "cancelled"
+  status          String
+  items           String   @db.Text // JSON: [{ slug, name, weight, qty, unitPrice, mixCode?, mixSummary? }]
   createdAt       DateTime @default(now())
 
+  // Copied from the Stripe session once it completes (webhook, success page,
+  // or the admin "Sync from Stripe" button), so the roasting queue stands alone.
+  customerName    String?
+  phone           String?   @db.VarChar(32)
+  shippingName    String?
+  shippingAddress String?   @db.Text // JSON Stripe Address { line1, line2, city, state, postal_code, country }
+  paymentIntentId String?   @db.VarChar(64)
+
+  // Fulfillment, set from /admin/queue.
+  roastedAt       DateTime?
+  shippedAt       DateTime?
+  carrier         String?   @db.VarChar(32)
+  trackingNumber  String?   @db.VarChar(64)
+  notes           String?   @db.Text
+
   @@index([userId])
+  @@index([status])
 }
 
 /// A completed Studio build — the recipe, not a line item. Quantity lives on the

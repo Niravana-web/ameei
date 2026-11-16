@@ -3,8 +3,8 @@
 $ErrorActionPreference = "Continue"
 Set-Location "C:\Users\SRI\Documents\Niravana\ameei\ads"
 $py = "C:\Users\SRI\miniconda3\envs\wan2gp\python.exe"
-$log = "night5_stdout.txt"
-"runner4 started $(Get-Date)" | Out-File $log -Encoding utf8
+$log = "night6_stdout.txt"
+"runner5 started $(Get-Date)" | Out-File $log -Encoding utf8
 
 function OtherWgp {
     Get-CimInstance Win32_Process -Filter "Name='python.exe'" | Where-Object { $_.CommandLine -like "*wgp.py*" -or $_.CommandLine -like "*pipeline.py*" }
@@ -23,4 +23,4 @@ if (Test-Path "repairs_blazer.json") {
     Rename-Item "repairs_blazer.json" "repairs_blazer.done.json" -ErrorAction SilentlyContinue
 }
 & $py pipeline.py loop *>> $log
-"runner4 finished $(Get-Date)" | Out-File $log -Append -Encoding utf8
+"runner5 finished $(Get-Date)" | Out-File $log -Append -Encoding utf8

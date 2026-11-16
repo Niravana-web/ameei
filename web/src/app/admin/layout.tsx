@@ -39,9 +39,9 @@ export default async function AdminLayout({
   }
 
   const nav = [
-    { href: "/admin", label: "Products" },
-    { href: "/admin/products/new", label: "Add product" },
-    { href: "/admin/orders", label: "Orders" },
+    { href: "/admin", label: "Dashboard" },
+    { href: "/admin/queue", label: "Roasting queue" },
+    { href: "/admin/customers", label: "Customers" },
   ];
 
   return (
@@ -51,7 +51,7 @@ export default async function AdminLayout({
           <span className="font-display text-headline-md font-black italic text-crimson">
             ameei admin
           </span>
-          <nav className="hidden items-center gap-4 md:flex">
+          <nav className="flex items-center gap-4">
             {nav.map((n) => (
               <Link
                 key={n.href}

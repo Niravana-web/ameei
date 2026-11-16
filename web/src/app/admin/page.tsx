@@ -1,103 +1,109 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
-import { rowToProduct } from "@/lib/catalog";
-import { defaultPrice, getCategoryLabel } from "@/lib/products";
+import { getAdminStats } from "@/lib/admin-stats";
 import { formatPrice } from "@/lib/site";
-import { deleteProduct } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminProductsPage() {
-  const rows = await prisma.product.findMany({
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
-  });
+function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div className="rounded-xl border border-ink/10 bg-white p-5">
+      <p className="font-body text-label-caps uppercase text-ash">{label}</p>
+      <p className="mt-2 font-display text-3xl font-black tracking-tight text-ink">{value}</p>
+      {sub && <p className="mt-1 font-body text-body-sm text-ash">{sub}</p>}
+    </div>
+  );
+}
+
+function Bars({ rows, total }: { rows: { label: string; count: number }[]; total: number }) {
+  if (rows.length === 0) return <p className="font-body text-body-sm text-ash">No pouches yet.</p>;
+  return (
+    <ul className="space-y-2">
+      {rows.map((r) => (
+        <li key={r.label} className="grid grid-cols-[8rem_1fr_2.5rem] items-center gap-3 font-body text-body-sm">
+          <span className="truncate text-ink">{r.label}</span>
+          <span className="h-2 overflow-hidden rounded-full bg-chalk">
+            <span
+              className="block h-full rounded-full bg-crimson"
+              style={{ width: `${total ? Math.round((r.count / total) * 100) : 0}%` }}
+            />
+          </span>
+          <span className="text-right text-ash">{r.count}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default async function AdminDashboard() {
+  const s = await getAdminStats();
+  const monthPouches = s.month.pouches || 1;
 
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-headline-lg text-ink">
-          Products <span className="text-ash">({rows.length})</span>
-        </h1>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <h1 className="font-display text-headline-lg text-ink">Dashboard</h1>
         <Link
-          href="/admin/products/new"
+          href="/admin/queue"
           className="rounded-full bg-crimson px-5 py-2 font-body text-label-caps uppercase text-white"
         >
-          + Add product
+          Roasting queue · {s.toRoast + s.roasting} open
         </Link>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-ink/10">
-        <table className="w-full border-collapse text-left font-body text-body-md">
-          <thead className="bg-chalk text-body-sm uppercase tracking-wide text-ash">
-            <tr>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Category</th>
-              <th className="px-4 py-3">From</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              const p = rowToProduct(row);
-              return (
-                <tr key={row.id} className="border-t border-ink/10">
-                  <td className="px-4 py-3">
-                    <div className="font-semibold text-ink">{p.name}</div>
-                    <div className="text-body-sm text-ash">/{p.slug}</div>
-                  </td>
-                  <td className="px-4 py-3 text-ink/80">{getCategoryLabel(p.category)}</td>
-                  <td className="px-4 py-3 text-ink/80">{formatPrice(defaultPrice(p))}</td>
-                  <td className="px-4 py-3">
-                    <span className="flex flex-wrap gap-1">
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-body-sm ${
-                          row.published
-                            ? "bg-success/15 text-success"
-                            : "bg-ash/15 text-ash"
-                        }`}
-                      >
-                        {row.published ? "Published" : "Draft"}
-                      </span>
-                      {row.featured && (
-                        <span className="rounded-full bg-saffron/20 px-2 py-0.5 text-body-sm text-saffron">
-                          Featured
-                        </span>
-                      )}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/admin/products/${row.id}`}
-                        className="text-crimson hover:underline"
-                      >
-                        Edit
-                      </Link>
-                      <form action={deleteProduct.bind(null, row.id)}>
-                        <button
-                          type="submit"
-                          className="text-ash hover:text-crimson"
-                          aria-label={`Delete ${p.name}`}
-                        >
-                          Delete
-                        </button>
-                      </form>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-ash">
-                  No products yet. Add your first one.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <section className="grid gap-4 sm:grid-cols-3">
+        <Stat
+          label="Today"
+          value={formatPrice(s.today.revenueCents / 100)}
+          sub={`${s.today.orders} orders · ${s.today.pouches} pouches`}
+        />
+        <Stat
+          label="Last 7 days"
+          value={formatPrice(s.week.revenueCents / 100)}
+          sub={`${s.week.orders} orders · ${s.week.pouches} pouches`}
+        />
+        <Stat
+          label="Last 30 days"
+          value={formatPrice(s.month.revenueCents / 100)}
+          sub={`${s.month.orders} orders · ${s.month.pouches} pouches`}
+        />
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-4">
+        <Stat label="To roast" value={String(s.toRoast)} sub="paid, not started" />
+        <Stat label="Roasting" value={String(s.roasting)} sub="in the kitchen" />
+        <Stat label="Shipped" value={String(s.shippedWeek)} sub="last 7 days" />
+        <Stat
+          label="People"
+          value={String(s.subscribers + s.customers)}
+          sub={`${s.customers} buyers · ${s.subscribers} subscribers`}
+        />
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-xl border border-ink/10 bg-white p-5">
+          <h2 className="mb-4 font-display text-headline-md text-ink">
+            Most picked <span className="font-body text-body-sm font-normal text-ash">30 days, by pouch</span>
+          </h2>
+          <Bars rows={s.ingredients} total={monthPouches} />
+        </div>
+        <div className="rounded-xl border border-ink/10 bg-white p-5">
+          <h2 className="mb-4 font-display text-headline-md text-ink">
+            Heat split <span className="font-body text-body-sm font-normal text-ash">30 days</span>
+          </h2>
+          <Bars rows={s.heat} total={monthPouches} />
+          <p className="mt-5 font-body text-body-sm text-ash">
+            Buyers and subscribers, with CSV export, are under{" "}
+            <Link href="/admin/customers" className="text-crimson hover:underline">
+              Customers
+            </Link>
+            . The pouch&apos;s listing name and photo on Stripe come from{" "}
+            <Link href="/admin/products" className="text-crimson hover:underline">
+              the product row
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
