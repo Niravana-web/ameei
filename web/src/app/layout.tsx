@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { HideOnAdmin } from "@/components/HideOnAdmin";
 import { CartProvider } from "@/lib/cart";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
@@ -154,9 +155,13 @@ export default function RootLayout({
             />
           </noscript>
           <CartProvider>
-            <SiteHeader />
+            <HideOnAdmin>
+              <SiteHeader />
+            </HideOnAdmin>
             <main className="flex-1">{children}</main>
-            <SiteFooter />
+            <HideOnAdmin>
+              <SiteFooter />
+            </HideOnAdmin>
           </CartProvider>
           <Analytics />
         </body>

@@ -15,8 +15,8 @@ export default async function AdminProductsPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-headline-lg text-ink">
-          Products <span className="text-ash">({rows.length})</span>
+        <h1 className="font-body text-[22px] font-bold tracking-[-0.02em] text-ink">
+          Pouch listing <span className="text-ash">({rows.length})</span>
         </h1>
         <Link
           href="/admin/products/new"

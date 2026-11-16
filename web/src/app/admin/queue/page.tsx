@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { PAID_STATUSES, type OrderStatus } from "@/lib/orders";
+import { PAID_STATUSES, parseItems, type OrderStatus } from "@/lib/orders";
 import { OrderCard } from "@/components/admin/OrderCard";
+import { Card, PageHeader } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -51,54 +52,47 @@ export default async function QueuePage({
   };
   const pouches = orders
     .filter((o) => PAID_STATUSES.includes(o.status as OrderStatus))
-    .reduce((n, o) => {
-      try {
-        return n + (JSON.parse(o.items) as { qty: number }[]).reduce((m, i) => m + i.qty, 0);
-      } catch {
-        return n;
-      }
-    }, 0);
+    .reduce((n, o) => n + parseItems(o.items).reduce((m, i) => m + i.qty, 0), 0);
 
   return (
-    <div>
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-headline-lg text-ink">Roasting queue</h1>
-          <p className="mt-1 font-body text-body-sm text-ash">
-            Oldest first. {orders.length} orders · {pouches} pouches in this view.
-          </p>
-        </div>
-        <nav aria-label="Queue filter" className="flex flex-wrap gap-2">
-          {VIEWS.map((v) => (
+    <>
+      <PageHeader
+        title="Roasting queue"
+        sub={`${view === "shipped" ? "Newest first" : "Oldest first"} · ${orders.length} orders · ${pouches} pouches in this view`}
+      />
+
+      <nav aria-label="Queue filter" className="flex flex-wrap gap-2">
+        {VIEWS.map((v) => {
+          const on = v.id === view;
+          return (
             <Link
               key={v.id}
               href={v.id === "open" ? "/admin/queue" : `/admin/queue?view=${v.id}`}
-              className={`rounded-full border px-3 py-1.5 font-body text-body-sm transition-colors ${
-                v.id === view
-                  ? "border-ink bg-ink text-chalk"
-                  : "border-ink/15 bg-white text-ink hover:border-crimson/50"
+              className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-[12.5px] font-medium transition-colors ${
+                on ? "border-ink bg-ink text-chalk" : "border-ink/15 bg-white text-ink hover:border-crimson/50"
               }`}
             >
               {v.label}
-              <span className={`ml-1.5 ${v.id === view ? "text-chalk/70" : "text-ash"}`}>
-                {badge[v.id]}
-              </span>
+              <span className={`text-[11px] ${on ? "text-chalk/70" : "text-[#8E7F81]"}`}>{badge[v.id]}</span>
             </Link>
-          ))}
-        </nav>
-      </div>
+          );
+        })}
+      </nav>
 
-      {orders.length === 0 ? (
-        <p className="rounded-xl border border-ink/10 bg-white px-4 py-10 text-center font-body text-body-md text-ash">
-          Nothing here. {view === "open" ? "Paid orders land in this queue as soon as Stripe confirms them." : ""}
-        </p>
-      ) : (
-        <div className="space-y-4">
-          {orders.map((o) => (
-            <OrderCard key={o.id} order={o} />
-          ))}
+      <Card className="overflow-hidden">
+        <div className="hidden gap-4 bg-[#FBF8F4] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.05em] text-[#8E7F81] xl:grid xl:grid-cols-[1.5fr_1fr_1fr]">
+          <span>Order · recipe</span>
+          <span>Ship to</span>
+          <span>Actions</span>
         </div>
-      )}
-    </div>
+        {orders.length === 0 ? (
+          <p className="px-4 py-10 text-center text-ash">
+            Nothing here.{view === "open" ? " Paid orders land in this queue as soon as Stripe confirms them." : ""}
+          </p>
+        ) : (
+          orders.map((o) => <OrderCard key={o.id} order={o} />)
+        )}
+      </Card>
+    </>
   );
 }

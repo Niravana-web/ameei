@@ -109,7 +109,7 @@ function readForm(formData: FormData) {
   };
 }
 
-function revalidateStorefront(slug?: string) {
+function revalidateStorefront() {
   revalidatePath("/");
   revalidatePath("/studio");
   revalidatePath("/admin/products");
@@ -140,7 +140,7 @@ export async function createProduct(
   } catch (e) {
     return { error: toMessage(e) };
   }
-  revalidateStorefront(data.slug);
+  revalidateStorefront();
   redirect("/admin/products"); // throws NEXT_REDIRECT — must stay outside the try/catch
 }
 
@@ -157,12 +157,12 @@ export async function updateProduct(
   } catch (e) {
     return { error: toMessage(e) };
   }
-  revalidateStorefront(data.slug);
+  revalidateStorefront();
   redirect("/admin/products");
 }
 
 export async function deleteProduct(id: string) {
   await requireAdmin();
   const row = await prisma.product.delete({ where: { id } });
-  revalidateStorefront(row.slug);
+  revalidateStorefront();
 }

@@ -1,98 +1,157 @@
+import Link from "next/link";
 import { getPeople } from "@/lib/people";
 import { formatPrice } from "@/lib/site";
+import { Card, PageHeader, Pill, Stat, Td, Th, btnPrimary, heatTone } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 
-export default async function CustomersPage() {
+type View = "all" | "buyers" | "repeat" | "subscribers";
+const VIEWS: { id: View; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "buyers", label: "Buyers" },
+  { id: "repeat", label: "Repeat" },
+  { id: "subscribers", label: "Subscribed, not bought" },
+];
+
+function initials(name: string | null, email: string) {
+  const src = name?.trim() || email.split("@")[0];
+  const parts = src.split(/[\s._-]+/).filter(Boolean);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
+}
+
+export default async function CustomersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ view?: string }>;
+}) {
+  const { view: raw } = await searchParams;
+  const view: View = VIEWS.some((v) => v.id === raw) ? (raw as View) : "all";
   const people = await getPeople();
-  const buyers = people.filter((p) => p.orders > 0).length;
-  const subs = people.filter((p) => p.subscriber).length;
+  const weekAgo = new Date().getTime() - 7 * 86400_000;
+
+  const buyers = people.filter((p) => p.orders > 0);
+  const repeat = people.filter((p) => p.orders > 1);
+  const subsOnly = people.filter((p) => p.subscriber && p.orders === 0);
+  const subs = people.filter((p) => p.subscriber);
+  const newWeek = people.filter((p) => p.firstSeen.getTime() >= weekAgo).length;
+  const bySource = subs.reduce<Record<string, number>>((m, p) => {
+    const k = p.source ?? "other";
+    m[k] = (m[k] ?? 0) + 1;
+    return m;
+  }, {});
+
+  const rows =
+    view === "buyers" ? buyers : view === "repeat" ? repeat : view === "subscribers" ? subsOnly : people;
+  const counts: Record<View, number> = {
+    all: people.length,
+    buyers: buyers.length,
+    repeat: repeat.length,
+    subscribers: subsOnly.length,
+  };
 
   return (
-    <div>
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-headline-lg text-ink">Customers</h1>
-          <p className="mt-1 font-body text-body-sm text-ash">
-            {people.length} people · {buyers} buyers · {subs} subscribers. One row per email.
-          </p>
-        </div>
-        <a
-          href="/admin/customers/export"
-          className="rounded-full bg-crimson px-5 py-2 font-body text-label-caps uppercase text-white"
-        >
-          Download CSV
-        </a>
-      </div>
+    <>
+      <PageHeader
+        title="Customers"
+        sub="Buyers and subscribers, one row per email"
+        actions={
+          <a href="/admin/customers/export" className={btnPrimary}>
+            Download CSV
+          </a>
+        }
+      />
 
-      <div className="overflow-x-auto rounded-xl border border-ink/10 bg-white">
-        <table className="w-full border-collapse text-left font-body text-body-sm">
-          <thead className="bg-chalk text-label-caps uppercase text-ash">
-            <tr>
-              <th className="px-4 py-3">Person</th>
-              <th className="px-4 py-3">Where</th>
-              <th className="px-4 py-3">Heat</th>
-              <th className="px-4 py-3 text-right">Orders</th>
-              <th className="px-4 py-3 text-right">Pouches</th>
-              <th className="px-4 py-3 text-right">Spent</th>
-              <th className="px-4 py-3">Last seen</th>
-              <th className="px-4 py-3">Tags</th>
-            </tr>
-          </thead>
-          <tbody>
-            {people.map((p) => (
-              <tr key={p.email} className="border-t border-ink/10 align-top">
-                <td className="px-4 py-3">
-                  <div className="font-semibold text-ink">{p.name ?? "—"}</div>
-                  <div className="text-ash">{p.email}</div>
-                  {p.phone && <div className="text-ash">{p.phone}</div>}
-                </td>
-                <td className="px-4 py-3 text-ink/80">
-                  {[p.city, p.state].filter(Boolean).join(", ") || "—"}
-                </td>
-                <td className="px-4 py-3 text-ink/80">{p.lastHeat ?? "—"}</td>
-                <td className="px-4 py-3 text-right text-ink">{p.orders || "—"}</td>
-                <td className="px-4 py-3 text-right text-ink">{p.pouches || "—"}</td>
-                <td className="px-4 py-3 text-right text-ink">
-                  {p.spentCents ? formatPrice(p.spentCents / 100) : "—"}
-                </td>
-                <td className="px-4 py-3 text-ink/80">
-                  {(p.lastOrder ?? p.firstSeen).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </td>
-                <td className="px-4 py-3">
-                  <span className="flex flex-wrap gap-1">
-                    {p.orders > 0 && (
-                      <span className="rounded-full bg-success/15 px-2 py-0.5 text-success">
-                        {p.orders > 1 ? "repeat" : "bought"}
-                      </span>
-                    )}
-                    {p.subscriber && (
-                      <span className="rounded-full bg-saffron/25 px-2 py-0.5 text-ink">
-                        {p.source ?? "subscriber"}
-                      </span>
-                    )}
-                  </span>
-                </td>
-              </tr>
-            ))}
-            {people.length === 0 && (
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="People summary">
+        <Stat label="People" value={String(people.length)} sub={`+${newWeek} this week`} />
+        <Stat label="Buyers" value={String(buyers.length)} sub={`${repeat.length} repeat`} />
+        <Stat
+          label="Subscribers"
+          value={String(subs.length)}
+          sub={Object.entries(bySource).map(([k, v]) => `${v} ${k}`).join(" · ") || "none yet"}
+        />
+        <Stat label="Subscribed, not bought" value={String(subsOnly.length)} sub="your outreach list" />
+      </section>
+
+      <nav aria-label="People filter" className="flex flex-wrap gap-2">
+        {VIEWS.map((v) => {
+          const on = v.id === view;
+          return (
+            <Link
+              key={v.id}
+              href={v.id === "all" ? "/admin/customers" : `/admin/customers?view=${v.id}`}
+              className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-[12.5px] font-medium transition-colors ${
+                on ? "border-ink bg-ink text-chalk" : "border-ink/15 bg-white text-ink hover:border-crimson/50"
+              }`}
+            >
+              {v.label}
+              <span className={`text-[11px] ${on ? "text-chalk/70" : "text-[#8E7F81]"}`}>{counts[v.id]}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-ash">
-                  No buyers or subscribers yet.
-                </td>
+                <Th>Person</Th>
+                <Th>Where</Th>
+                <Th>Heat</Th>
+                <Th right>Orders</Th>
+                <Th right>Pouches</Th>
+                <Th right>Spent</Th>
+                <Th>Last seen</Th>
+                <Th>Tags</Th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <p className="mt-4 font-body text-body-sm text-ash">
-        The CSV matches the columns in <code>ads/crm/ameei_crm.csv</code> closely enough to paste in.
-        Customer data stays in this database and your download; it is never committed.
-      </p>
-    </div>
+            </thead>
+            <tbody>
+              {rows.map((p) => (
+                <tr key={p.email} className="last:[&>td]:border-b-0">
+                  <Td>
+                    <div className="flex items-center gap-2.5">
+                      <span className="inline-flex h-[30px] w-[30px] flex-none items-center justify-center rounded-full bg-[#FFF1EC] text-[11px] font-bold text-crimson-deep">
+                        {initials(p.name, p.email)}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="font-semibold">{p.name ?? "—"}</div>
+                        <div className="truncate text-xs text-ash">
+                          {p.email}
+                          {p.phone ? ` · ${p.phone}` : ""}
+                        </div>
+                      </div>
+                    </div>
+                  </Td>
+                  <Td>{[p.city, p.state].filter(Boolean).join(", ") || "—"}</Td>
+                  <Td>{p.lastHeat ? <Pill tone={heatTone(p.lastHeat)}>{p.lastHeat.replace(" Spice", "")}</Pill> : "—"}</Td>
+                  <Td right>{p.orders || "—"}</Td>
+                  <Td right>{p.pouches || "—"}</Td>
+                  <Td right>{p.spentCents ? formatPrice(p.spentCents / 100) : "—"}</Td>
+                  <Td>
+                    {(p.lastOrder ?? p.firstSeen).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </Td>
+                  <Td>
+                    <span className="flex flex-wrap gap-1">
+                      {p.orders > 1 && <Pill tone="up">repeat</Pill>}
+                      {p.orders === 1 && <Pill tone="up">bought</Pill>}
+                      {p.subscriber && <Pill tone="warn">{p.source ?? "subscriber"}</Pill>}
+                    </span>
+                  </Td>
+                </tr>
+              ))}
+              {rows.length === 0 && (
+                <tr>
+                  <Td className="py-10 text-center text-ash">No one in this view yet.</Td>
+                  <Td /><Td /><Td /><Td /><Td /><Td /><Td />
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <p className="border-t border-ink/[0.08] px-4 py-2.5 text-xs text-ash">
+          Showing {rows.length} of {people.length}. The CSV matches the outreach sheet&apos;s columns; customer data stays in this database and your download.
+        </p>
+      </Card>
+    </>
   );
 }
