@@ -33,7 +33,7 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - [x] Payment method added: Visa ····5142, USD, US billing. Monthly account spending limit $75 (resets on the 1st).
 - [x] Ameei Page confirmed for ads, phone verified (Lokesh), Account overview shows setup complete.
 - [x] Domain ameei.in VERIFIED in Meta (ID 1465907779006540) on 2026-11-16 after the web/ deploy (commit 38fd8c4, Vercel root ./web).
-- [x] Pixel/dataset "ameei" (ID 2866828870386268) live on www.ameei.in (fbq loaded on the page). Advanced matching off. Confirm PageView in Events Manager after a few minutes.
+- [x] Pixel/dataset "ameei" (ID 2866828870386268) live on www.ameei.in. Events: PageView, AddToCart (Studio), InitiateCheckout (cart), Purchase (confirmation page, eventID = Stripe session id). Verified firing on the live site 2026-11-16. Advanced matching off.
 - [ ] Review ad previews for cut-off hooks on 4:5 / 1:1 placements; keep 9:16 only if cropping hurts.
 - [ ] Claims in primary text follow design-system/guidelines/voice.md (no "healthy" as a nutrient claim without a fact next to it).
 
