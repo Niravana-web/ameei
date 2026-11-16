@@ -19,8 +19,10 @@ export const STUDIO_PRODUCT_NAME = "Build Your Own Mix";
  *
  * v2: dropped per-ingredient add-on pricing — a mix is now one price per pack
  * size, whatever you put in it.
+ * v3: one pack size only (8oz). 16oz and 32oz are no longer made; a stored mix
+ * at those sizes fails validation and asks the customer to rebuild.
  */
-export const STUDIO_PRICING_VERSION = 2;
+export const STUDIO_PRICING_VERSION = 3;
 
 export type StudioGroupId = "nuts" | "cereals" | "extras" | "spice" | "salt";
 
@@ -72,17 +74,17 @@ export interface MixValidation {
 
 /**
  * Pack size is the ONLY thing that sets the price. Every ingredient, spice level
- * and salt level is included — a fully loaded 16oz bag and a plain one both cost
- * the same. Keep this list ordered smallest-first; the seed's monotonic-pricing
- * check relies on it.
+ * and salt level is included — a fully loaded pouch and a plain one both cost
+ * the same. ameei makes exactly one size today; keep this list ordered
+ * smallest-first if more are ever added, the seed's monotonic-pricing check
+ * relies on it.
  */
-export const STUDIO_SIZES: readonly StudioSize[] = [
-  { label: "8oz", priceCents: 1000 },
-  { label: "16oz", priceCents: 1800 },
-  { label: "32oz", priceCents: 3200 },
-];
+export const STUDIO_SIZES: readonly StudioSize[] = [{ label: "8oz", priceCents: 1000 }];
 
-export const STUDIO_DEFAULT_SIZE = "16oz";
+export const STUDIO_DEFAULT_SIZE = "8oz";
+
+/** The one pouch, for copy: "8oz", $10. */
+export const STUDIO_POUCH = STUDIO_SIZES[0];
 
 export const STUDIO_GROUPS: readonly StudioGroup[] = [
   {
@@ -156,6 +158,92 @@ export const STUDIO_GROUPS: readonly StudioGroup[] = [
 
 /** Groups whose selections constitute "the mix" for the not-empty rule. */
 export const MIX_GROUP_IDS: readonly StudioGroupId[] = ["nuts", "cereals", "extras"];
+
+/**
+ * House recipes. NOT products: each one opens the Studio with the pantry
+ * pre-ticked (`/studio?preset=<id>`) and the customer can change anything.
+ * Ids are URL-visible and may be linked from ads, so treat them as stable.
+ */
+export interface StudioPreset {
+  id: string;
+  name: string;
+  tagline: string;
+  blurb: string;
+  /** Short heat word for the card pill. */
+  heat: "No spice" | "Medium" | "Extra hot";
+  image: { src: string; alt: string };
+  recipe: Omit<MixSelection, "weight">;
+}
+
+export const STUDIO_PRESETS: readonly StudioPreset[] = [
+  {
+    id: "straight-shooter",
+    name: "The Straight Shooter",
+    tagline: "No heat, no fuss, all crunch.",
+    blurb:
+      "Peanuts, almonds, cornflakes, rice checks, raisins. Less salt. The shared-desk, kids-in-the-car pouch.",
+    heat: "No spice",
+    image: {
+      src: "/images/products/hero-chivda-bowl.jpg",
+      alt: "Golden roasted snack mix heaped in a ceramic bowl",
+    },
+    recipe: {
+      nuts: ["peanuts", "almonds"],
+      cereals: ["cornflakes", "rice-checks"],
+      extras: ["raisins"],
+      spice: "no-spice",
+      salt: "less-salt",
+    },
+  },
+  {
+    id: "everyday-medium",
+    name: "Everyday Medium",
+    tagline: "The one you'll finish first.",
+    blurb:
+      "Peanuts, cashews, cornflakes, wheat checks, raisins, pita chips. Warm across the tongue, gone by the next handful.",
+    heat: "Medium",
+    image: {
+      src: "/images/products/spicy-crunch-main.jpg",
+      alt: "Spicy roasted snack mix spilling from a glass jar",
+    },
+    recipe: {
+      nuts: ["peanuts", "cashews"],
+      cereals: ["cornflakes", "wheat-checks"],
+      extras: ["raisins", "pita-chips"],
+      spice: "medium-spice",
+      salt: "less-salt",
+    },
+  },
+  {
+    id: "extra-hot-trail",
+    name: "Extra Hot Trail",
+    tagline: "Handle with respect.",
+    blurb:
+      "Peanuts, almonds, wheat and rice checks, pumpkin and pita chips, extra hot. A long burn, not a flash.",
+    heat: "Extra hot",
+    image: {
+      src: "/images/products/brand-story.jpg",
+      alt: "Hands tossing roasted mix over a dark bowl",
+    },
+    recipe: {
+      nuts: ["peanuts", "almonds"],
+      cereals: ["wheat-checks", "rice-checks"],
+      extras: ["pita-chips", "pumpkin-chips"],
+      spice: "extra-hot",
+      salt: "some-salt",
+    },
+  },
+];
+
+export function findPreset(id: string | undefined | null): StudioPreset | undefined {
+  if (!id) return undefined;
+  return STUDIO_PRESETS.find((p) => p.id === id);
+}
+
+/** A preset as a full, valid selection at the one pack size. */
+export function presetSelection(preset: StudioPreset): MixSelection {
+  return { weight: STUDIO_DEFAULT_SIZE, ...preset.recipe };
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Lookups

@@ -1,10 +1,10 @@
 export const siteConfig = {
   name: "ameei",
-  tagline: "Crunch with a little bit of spice",
+  tagline: "One pouch. Your recipe.",
   description:
-    "Small-batch Indian snack mixes — roasted, spiced, and packed the way they're meant to be. Rooted in Indian family recipes, made and shipped fresh across the US.",
+    "ameei makes one thing: an 8 oz pouch of roasted nuts, cereals and extras, blended to your order. Pick the ingredients, set the heat and the salt, and we roast, blend and ship it within 24 hours. Roasted, never fried. Nothing artificial.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ameei.in",
-  ogImage: "/images/products/hero-chivda-bowl.jpg",
+  ogImage: "/images/pouch/pouch-hero.jpg",
   links: {
     instagram: "https://instagram.com/ameei_snacks",
     tiktok: "https://tiktok.com/@ameei.snacks",
@@ -12,10 +12,8 @@ export const siteConfig = {
 } as const;
 
 export const navLinks = [
-  { label: "Shop", href: "/shop" },
   { label: "Studio", href: "/studio" },
-  { label: "Spices", href: "/spices" },
-  { label: "Heritage", href: "/heritage" },
+  { label: "How it works", href: "/#how" },
   { label: "Journal", href: "/journal" },
 ] as const;
 

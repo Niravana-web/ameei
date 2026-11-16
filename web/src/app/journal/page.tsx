@@ -164,8 +164,8 @@ export default function JournalPage() {
                   <ButtonLink href={siteConfig.links.instagram} variant="ghost">
                     Follow On Instagram
                   </ButtonLink>
-                  <ButtonLink href="/shop" variant="secondary">
-                    Shop The Range
+                  <ButtonLink href="/studio" variant="secondary">
+                    Build Your Pouch
                   </ButtonLink>
                 </div>
               </div>

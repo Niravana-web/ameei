@@ -48,10 +48,10 @@ export default function CartPage() {
         <div className="rounded-2xl border border-ink/10 bg-white/70 p-10 text-center">
           <p className="font-body text-body-lg text-ash">Your bag is empty.</p>
           <Link
-            href="/shop"
+            href="/studio"
             className="mt-5 inline-block rounded-full bg-crimson px-6 py-2.5 font-body text-label-caps uppercase text-white"
           >
-            Browse the shop
+            Build a pouch
           </Link>
         </div>
       ) : (
@@ -64,7 +64,7 @@ export default function CartPage() {
                 className="flex gap-4 rounded-xl border border-ink/10 bg-white/70 p-3"
               >
                 <Link
-                  href={it.mixCode ? `/studio/${it.mixCode}` : `/shop/${it.slug}`}
+                  href={it.mixCode ? `/studio/${it.mixCode}` : "/studio"}
                   className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-chalk"
                 >
                   <Image src={it.image} alt={it.name} fill sizes="80px" className="object-cover" />
@@ -73,7 +73,7 @@ export default function CartPage() {
                   <div className="flex justify-between gap-3">
                     <div>
                       <Link
-                        href={it.mixCode ? `/studio/${it.mixCode}` : `/shop/${it.slug}`}
+                        href={it.mixCode ? `/studio/${it.mixCode}` : "/studio"}
                         className="font-display text-headline-md text-ink hover:text-crimson"
                       >
                         {it.name}
@@ -156,10 +156,10 @@ export default function CartPage() {
               </SignInButton>
             )}
             <Link
-              href="/shop"
+              href="/studio"
               className="mt-3 block text-center font-body text-body-sm text-ash hover:text-crimson"
             >
-              Continue shopping
+              Build another pouch
             </Link>
           </aside>
         </div>

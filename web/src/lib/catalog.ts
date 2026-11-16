@@ -43,23 +43,3 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
   const row = await prisma.product.findUnique({ where: { slug } });
   return row && row.published ? rowToProduct(row) : undefined;
 }
-
-export async function getFeaturedProducts(): Promise<Product[]> {
-  const rows = await prisma.product.findMany({
-    where: { ...PUBLISHED, featured: true },
-    orderBy: ORDER,
-    take: 3,
-  });
-  // Fall back to first 3 published if nothing is flagged featured.
-  if (rows.length) return rows.map(rowToProduct);
-  return (await getAllProducts()).slice(0, 3);
-}
-
-export async function getRelatedProducts(slug: string, count = 3): Promise<Product[]> {
-  const rows = await prisma.product.findMany({
-    where: { ...PUBLISHED, slug: { not: slug } },
-    orderBy: ORDER,
-    take: count,
-  });
-  return rows.map(rowToProduct);
-}

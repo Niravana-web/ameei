@@ -61,10 +61,10 @@ export default async function OrderSuccessPage({
           </p>
         )}
         <Link
-          href="/shop"
+          href="/studio"
           className="mt-6 inline-block rounded-full bg-crimson px-6 py-2.5 font-body text-label-caps uppercase text-white"
         >
-          Keep shopping
+          Build another pouch
         </Link>
       </div>
     </Container>

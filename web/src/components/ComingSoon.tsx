@@ -31,8 +31,8 @@ export function ComingSoon({
             something is simmering…
           </p>
           <div className="animate-fade-up delay-4">
-            <ButtonLink href="/shop" variant="secondary">
-              Shop the Range Instead
+            <ButtonLink href="/studio" variant="secondary">
+              Build a pouch instead
             </ButtonLink>
           </div>
         </div>

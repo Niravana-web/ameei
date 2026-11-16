@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { getMixByCode } from "@/lib/mixes";
 import { getProductBySlug } from "@/lib/catalog";
 import { siteConfig } from "@/lib/site";
-import { Container, NoiseOverlay } from "@/components/ui/primitives";
+import { Container } from "@/components/ui/primitives";
 import { StudioBuilder } from "@/components/studio/StudioBuilder";
 import { STUDIO_PRICING_VERSION, STUDIO_PRODUCT_SLUG } from "@/lib/studio";
 
-const FALLBACK_IMAGE = "/images/products/hero-chivda-bowl.jpg";
+const FALLBACK_IMAGE = "/images/pouch/pouch-table.jpg";
 
 // Share links are per-customer and shouldn't compete with /studio in search,
 // hence the noindex below.
@@ -44,10 +44,9 @@ export default async function SharedMixPage({
   const pricesMoved = mix.pricingVersion !== STUDIO_PRICING_VERSION;
 
   return (
-    <Container className="pb-16 pt-24 md:pt-28">
-      <header className="relative mb-10 overflow-hidden rounded-[1.5rem] border border-crimson/10 bg-white/70 p-8 shadow-spice backdrop-blur-xl md:p-10">
-        <NoiseOverlay />
-        <div className="relative z-10 max-w-2xl">
+    <Container className="pb-20 pt-28 md:pt-36">
+      <header className="mb-10">
+        <div className="max-w-2xl">
           <p className="mb-2 font-body text-label-caps uppercase text-crimson">
             Shared mix · {mix.code}
           </p>
@@ -58,8 +57,8 @@ export default async function SharedMixPage({
           <p className="mt-4 font-body text-editorial text-ash">{mix.summary}</p>
           {pricesMoved && (
             <p className="mt-4 rounded-lg border border-saffron/40 bg-saffron/10 px-3 py-2 font-body text-body-md text-ink">
-              Our prices have changed since this mix was built — the total below is
-              current.
+              This pouch was built before our current size and price. It opens at today&apos;s
+              8 oz pouch and price.
             </p>
           )}
         </div>

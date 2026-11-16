@@ -111,9 +111,8 @@ function readForm(formData: FormData) {
 
 function revalidateStorefront(slug?: string) {
   revalidatePath("/");
-  revalidatePath("/shop");
+  revalidatePath("/studio");
   revalidatePath("/admin");
-  if (slug) revalidatePath(`/shop/${slug}`);
 }
 
 export type FormState = { error?: string };

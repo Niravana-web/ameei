@@ -1,29 +1,31 @@
-import { getAllProducts } from "@/lib/catalog";
 import { siteConfig } from "@/lib/site";
+import { STUDIO_GROUPS, STUDIO_PRESETS, STUDIO_POUCH } from "@/lib/studio";
 
 export async function GET() {
-  const products = await getAllProducts();
-
-  const shopLines = products
-    .map((p) => `- [${p.name}](${siteConfig.url}/shop/${p.slug}): ${p.tagline}`)
+  const pantry = STUDIO_GROUPS.filter((g) => g.countsTowardMix)
+    .map((g) => `- ${g.label}: ${g.options.map((o) => o.label).join(", ")}`)
     .join("\n");
+  const presets = STUDIO_PRESETS.map(
+    (p) => `- [${p.name}](${siteConfig.url}/studio?preset=${p.id}): ${p.tagline}`,
+  ).join("\n");
 
   const body = `# ${siteConfig.name}
 > ${siteConfig.description}
 
-## Shop
-${shopLines}
+## The one product
+- [Studio](${siteConfig.url}/studio): build an ${STUDIO_POUCH.label} pouch for $${(STUDIO_POUCH.priceCents / 100).toFixed(0)}. Pick any of the ingredients below, set the heat (no spice, medium, extra hot) and the salt (none, less, some). One price whatever you choose.
 
-## Build your own
-- [Studio](${siteConfig.url}/studio): Choose your own nuts, cereals, extras, spice level and salt level; blended to order.
+## Pantry
+${pantry}
 
-## About
-- [Heritage](${siteConfig.url}/heritage): The story of ${siteConfig.name}'s five-generation family recipes.
+## House recipes (presets that open the Studio pre-filled)
+${presets}
 
 ## Key facts
-- Small-batch Indian snack mixes, family recipes carried across five generations.
-- All products are 100% natural, with no artificial colors or preservatives.
-- Ships within 24 hours.
+- Every pouch is roasted, blended and shipped within 24 hours of the order.
+- Roasted, never fried. No artificial colors or preservatives.
+- Made in a kitchen that handles peanuts and tree nuts.
+- First order: code FIRSTPOUCH takes 15% off at checkout.
 `;
 
   return new Response(body, {

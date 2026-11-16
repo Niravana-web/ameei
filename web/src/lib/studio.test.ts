@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import {
+  STUDIO_PRESETS,
   STUDIO_SIZES,
   canonicalMixKey,
   describeMix,
   emptySelection,
   normalizeSelection,
+  presetSelection,
   priceMix,
   spiceLevelOf,
   validateMix,
@@ -18,35 +20,35 @@ function build(over: Partial<MixSelection> = {}): MixSelection {
 
 // ── Pricing ──────────────────────────────────────────────────────────────────
 
-// Pack size sets the price outright.
+// Pack size sets the price outright. ameei makes one size.
 assert.equal(priceMix(build({ weight: "8oz" })), 1000);
-assert.equal(priceMix(build({ weight: "16oz" })), 1800);
-assert.equal(priceMix(build({ weight: "32oz" })), 3200);
+assert.equal(STUDIO_SIZES.length, 1, "one pouch size is offered");
 
-// THE rule: what goes in the bag does not move the number. An empty 16oz mix and
-// a maximally loaded one both cost $18.
+// THE rule: what goes in the bag does not move the number. An empty 8oz mix and
+// a maximally loaded one both cost $10.
 const loaded = build({
-  weight: "16oz",
+  weight: "8oz",
   nuts: ["peanuts", "cashews", "almonds"],
   cereals: ["cornflakes", "wheat-checks", "rice-checks"],
   extras: ["raisins", "coconut-flakes", "rice-flakes", "pita-chips", "press", "pumpkin-chips"],
   spice: "extra-hot",
   salt: "some-salt",
 });
-assert.equal(priceMix(loaded), 1800, "a fully loaded 16oz mix is still the 16oz price");
+assert.equal(priceMix(loaded), 1000, "a fully loaded 8oz mix is still the 8oz price");
 assert.equal(
   priceMix(loaded),
-  priceMix(build({ weight: "16oz", cereals: ["cornflakes"] })),
+  priceMix(build({ weight: "8oz", cereals: ["cornflakes"] })),
   "ingredient count must not affect price",
 );
 
 // Spice and salt are included too.
-const mild = build({ weight: "16oz", nuts: ["peanuts"], spice: "no-spice", salt: "no-salt" });
-const fiery = build({ weight: "16oz", nuts: ["peanuts"], spice: "extra-hot", salt: "some-salt" });
+const mild = build({ weight: "8oz", nuts: ["peanuts"], spice: "no-spice", salt: "no-salt" });
+const fiery = build({ weight: "8oz", nuts: ["peanuts"], spice: "extra-hot", salt: "some-salt" });
 assert.equal(priceMix(mild), priceMix(fiery), "spice/salt must not affect price");
 
-// Only the size changes it.
-assert.notEqual(priceMix(build({ ...loaded, weight: "32oz" })), priceMix(loaded));
+// Retired sizes are gone for good: an old 16oz share link must not price.
+assert.throws(() => priceMix(build({ ...loaded, weight: "16oz" })));
+assert.equal(validateMix(build({ ...loaded, weight: "32oz" })).ok, false, "32oz is not offered");
 
 // Bigger pack is always dearer (the seed asserts this too).
 const prices = STUDIO_SIZES.map((s) => priceMix(build({ weight: s.label })));
@@ -63,7 +65,7 @@ assert.throws(() => priceMix(build({ weight: "999oz" })));
 assert.equal(validateMix(build({ nuts: ["walnuts"] })).ok, false, "walnuts are not offered");
 
 // Spice/salt alone is seasoning, not a mix.
-assert.equal(validateMix(build({ weight: "16oz" })).ok, false, "empty mix rejected");
+assert.equal(validateMix(build({ weight: "8oz" })).ok, false, "empty mix rejected");
 
 // 0+ per group means a lone cereal with no nuts is perfectly legal.
 assert.equal(validateMix(build({ cereals: ["cornflakes"] })).ok, true);
@@ -93,16 +95,27 @@ assert.deepEqual(
 );
 
 // Order-independent and idempotent — the fingerprint depends on both.
-const a = normalizeSelection({ weight: "16oz", nuts: ["cashews", "peanuts"], spice: "no-spice", salt: "no-salt" });
-const b = normalizeSelection({ weight: "16oz", nuts: ["peanuts", "cashews"], spice: "no-spice", salt: "no-salt" });
+const a = normalizeSelection({ weight: "8oz", nuts: ["cashews", "peanuts"], spice: "no-spice", salt: "no-salt" });
+const b = normalizeSelection({ weight: "8oz", nuts: ["peanuts", "cashews"], spice: "no-spice", salt: "no-salt" });
 assert.equal(canonicalMixKey(a), canonicalMixKey(b), "selection order must not change the key");
 assert.deepEqual(normalizeSelection(a), a, "normalizeSelection must be idempotent");
 
 // Different builds must not collide.
 assert.notEqual(
-  canonicalMixKey(build({ weight: "16oz", nuts: ["peanuts"] })),
-  canonicalMixKey(build({ weight: "32oz", nuts: ["peanuts"] })),
+  canonicalMixKey(build({ nuts: ["peanuts"] })),
+  canonicalMixKey(build({ nuts: ["cashews"] })),
 );
+
+// ── Presets ──────────────────────────────────────────────────────────────────
+
+// Every house recipe must be a valid build at the offered size, priced like any other.
+assert.equal(STUDIO_PRESETS.length, 3);
+for (const preset of STUDIO_PRESETS) {
+  const sel = presetSelection(preset);
+  assert.equal(validateMix(sel).ok, true, `${preset.id} must validate`);
+  assert.equal(priceMix(sel), 1000, `${preset.id} costs the same as any pouch`);
+  assert.deepEqual(normalizeSelection(sel), sel, `${preset.id} must already be canonical`);
+}
 
 // ── Description ──────────────────────────────────────────────────────────────
 

@@ -45,10 +45,10 @@ export default async function AccountOrdersPage() {
         <div className="rounded-2xl border border-ink/10 bg-white/70 p-10 text-center">
           <p className="font-body text-body-lg text-ash">No orders yet.</p>
           <Link
-            href="/shop"
+            href="/studio"
             className="mt-5 inline-block rounded-full bg-crimson px-6 py-2.5 font-body text-label-caps uppercase text-white"
           >
-            Browse the shop
+            Build a pouch
           </Link>
         </div>
       ) : (

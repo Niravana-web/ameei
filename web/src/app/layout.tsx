@@ -33,12 +33,12 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "Indian snacks",
+    "healthy snacks",
+    "build your own snack mix",
+    "roasted nut mix",
+    "custom trail mix",
     "small-batch snacks",
     "spicy snack mix",
-    "chivda",
-    "masala peanuts",
-    "artisan spice blends",
   ],
   openGraph: {
     type: "website",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: siteConfig.url,
     images: [
-      { url: siteConfig.ogImage, width: 1200, height: 630, alt: "ameei snack mixes" },
+      { url: siteConfig.ogImage, width: 1200, height: 630, alt: "An ameei 8 oz pouch beside a bowl of roasted snack mix" },
     ],
   },
   twitter: {

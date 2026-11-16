@@ -12,6 +12,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: s3Host }],
     formats: ["image/avif", "image/webp"],
   },
+  // The site sells one made-to-order pouch; the old catalog routes are gone.
+  async redirects() {
+    return [
+      { source: "/shop", destination: "/studio", permanent: true },
+      { source: "/shop/:slug", destination: "/studio", permanent: true },
+      { source: "/spices", destination: "/", permanent: true },
+      { source: "/heritage", destination: "/", permanent: true },
+    ];
+  },
   // ponytail: baseline-only headers. Skipped CSP — this app loads Clerk, Stripe,
   // and GTM scripts; a wrong CSP silently breaks auth/checkout. Add CSP once
   // every third-party script origin is enumerated and tested.
