@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { useCart, cartLineKey } from "@/lib/cart";
 import { formatPrice } from "@/lib/site";
+import { track } from "@/lib/pixel";
 import { Container } from "@/components/ui/primitives";
 import { PlusIcon, MinusIcon } from "@/components/ui/icons";
 
@@ -16,6 +17,7 @@ export default function CartPage() {
   const [error, setError] = useState<string | null>(null);
 
   async function checkout() {
+    track("InitiateCheckout", { value: subtotal, num_items: count, content_type: "product", content_ids: ["build-your-own"] });
     setLoading(true);
     setError(null);
     try {

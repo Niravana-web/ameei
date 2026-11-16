@@ -4,6 +4,7 @@ import { applyCompletedSession } from "@/lib/orders";
 import { formatPrice } from "@/lib/site";
 import { Container } from "@/components/ui/primitives";
 import { ClearCart } from "@/components/cart/ClearCart";
+import { PurchasePixel } from "@/components/cart/PurchasePixel";
 
 export const metadata = {
   title: "Order confirmed",
@@ -19,11 +20,13 @@ export default async function OrderSuccessPage({
 
   let email: string | null = null;
   let total: number | null = null;
+  let itemCount = 0;
   if (session_id) {
     try {
-      const session = await stripe.checkout.sessions.retrieve(session_id);
+      const session = await stripe.checkout.sessions.retrieve(session_id, { expand: ["line_items"] });
       email = session.customer_details?.email ?? null;
       total = session.amount_total != null ? session.amount_total / 100 : null;
+      itemCount = session.line_items?.data.reduce((n, li) => n + (li.quantity ?? 0), 0) ?? 0;
       // Fallback reconciliation: the webhook is the canonical path, but if it's
       // delayed the order stays "pending". Stripe is the source of truth, so
       // apply the completed session ourselves. Idempotent and never regresses
@@ -39,6 +42,7 @@ export default async function OrderSuccessPage({
   return (
     <Container className="flex min-h-screen flex-col items-center justify-center pb-16 pt-24 text-center">
       <ClearCart />
+      {session_id && <PurchasePixel sessionId={session_id} value={total} items={itemCount} />}
       <div className="max-w-lg rounded-2xl border border-ink/10 bg-white/70 p-10">
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-success/15 text-2xl text-success">
           ✓

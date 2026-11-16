@@ -11,7 +11,7 @@
 
 /** The Product row a custom build attaches to. Must exist and be published. */
 export const STUDIO_PRODUCT_SLUG = "build-your-own";
-export const STUDIO_PRODUCT_NAME = "Build Your Own Mix";
+export const STUDIO_PRODUCT_NAME = "ameei pouch";
 
 /**
  * Bump whenever STUDIO_SIZES changes. Stored on each CustomMix so a shared build

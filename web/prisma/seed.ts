@@ -47,8 +47,8 @@ type Seed = {
 const SEED: Seed[] = [
   {
     slug: STUDIO_PRODUCT_SLUG,
-    name: "Build Your Own Mix",
-    tagline: "Your mix, your rules.",
+    name: "ameei pouch",
+    tagline: "Your recipe, roasted this week.",
     description:
       "What is Build Your Own Mix? It's the whole American Healthy Mix range handed over to you. Start with peanuts, cashews, or almonds — take one, take all three. Add the cereals that carry the crunch: cornflakes, wheat checks, rice checks. Then decide how far you want to go with raisins, coconut flakes, rice flakes, pita chips, press, and pumpkin chips. Set your heat anywhere from no spice to extra hot, and your salt from none at all to just enough. Nothing is fried, everything is roasted, and the bag is blended the day it ships. Most people build one mix for the desk drawer and a second, hotter one for the weekend. Open the Studio, move a few switches, and watch the price update as you go — no guessing, no surprises at checkout.",
     recipe: { nuts: [], cereals: [], extras: [], spice: "medium-spice", salt: "less-salt" },
@@ -56,8 +56,8 @@ const SEED: Seed[] = [
     badge: "NEW",
     featured: true,
     image: {
-      src: "/images/products/hero-chivda-bowl.jpg",
-      alt: "An overflowing bowl of golden snack mix surrounded by loose nuts and cereal pieces on a warm linen surface",
+      src: "/images/pouch/pouch-hero.jpg",
+      alt: "An ameei 8 oz kraft pouch beside a wooden bowl of roasted snack mix",
     },
     gallery: [
       {

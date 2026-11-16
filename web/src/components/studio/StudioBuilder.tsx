@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cart";
+import { track } from "@/lib/pixel";
 import { formatPrice } from "@/lib/site";
 import {
   STUDIO_DEFAULT_SIZE,
@@ -138,6 +139,13 @@ export function StudioBuilder({
         image,
         mixCode: data.code,
         mixSummary: data.summary,
+      });
+      track("AddToCart", {
+        value: (data.unitPriceCents / 100) * qty,
+        num_items: qty,
+        content_type: "product",
+        content_ids: [STUDIO_PRODUCT_SLUG],
+        content_name: data.summary,
       });
       setAdded(true);
     } catch (e) {
