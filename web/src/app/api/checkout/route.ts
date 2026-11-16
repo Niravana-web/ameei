@@ -108,6 +108,8 @@ export async function POST(req: Request) {
       shipping_address_collection: {
         allowed_countries: ["US", "CA", "GB", "IN", "AU"],
       },
+      // Shows the "Add promotion code" box on the Stripe page (FIRSTPOUCH etc.).
+      allow_promotion_codes: true,
       success_url: `${base}/order/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/cart`,
     });
