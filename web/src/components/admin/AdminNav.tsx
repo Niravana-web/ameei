@@ -9,8 +9,6 @@ const kitchen = [
   { href: "/admin/customers", label: "Customers", icon: "people" },
 ] as const;
 
-const store = [{ href: "/admin/products", label: "Pouch listing", icon: "bag" }] as const;
-
 function Icon({ name }: { name: string }) {
   const common = {
     width: 16,
@@ -44,13 +42,6 @@ function Icon({ name }: { name: string }) {
         <svg {...common}>
           <circle cx="9" cy="8" r="3.5" />
           <path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-5-6.3" />
-        </svg>
-      );
-    case "bag":
-      return (
-        <svg {...common}>
-          <path d="M6 8h12l-1 12H7L6 8z" />
-          <path d="M9 8V6a3 3 0 0 1 6 0v2" />
         </svg>
       );
     default:
@@ -111,10 +102,6 @@ export function AdminNav({ openOrders }: { openOrders: number }) {
           active={isActive(n.href)}
           badge={n.href === "/admin/queue" ? openOrders : undefined}
         />
-      ))}
-      <span className={heading}>Store</span>
-      {store.map((n) => (
-        <NavLink key={n.href} {...n} active={isActive(n.href)} />
       ))}
       <div className="mx-1 my-2 h-px bg-ink/[0.08]" />
       <NavLink href="/" label="View site" icon="ext" active={false} />
