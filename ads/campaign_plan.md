@@ -50,3 +50,11 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - [x] First-pouch offer code FIRSTPOUCH (15% off, first order only) created in Stripe and `allow_promotion_codes` enabled in checkout (commit 6e76158). Coupon + code also created in LIVE mode on 2026-11-16. Vercel Production now runs the live key and the live webhook secret (endpoint we_1UcR4f…, verified with a signed probe on 2026-11-16; old endpoint we_1TlCPG disabled). TESTPOUCH (100%, single use, 24 h) was used once to exercise the flow; FIRSTPOUCH confirmed on the live Stripe page at $8.50.
 - Reply to the July collaboration DMs (two US bloggers) with a sample offer.
 - Test the HEAT comment automation from a second account.
+
+## Published 2026-11-16 (user: "go start now")
+- Campaign 120251608426960361 / ad set 120251608426970361 published from draft at ~22:20 IST.
+- Schedule changed before publish: **17 Nov 2026 11:29 EST -> 17 Dec 2026 11:29 EST** (was 1-31 Dec). $75 lifetime, standard delivery.
+- Ads 120251608426980361 (carry_on existing post, caption now has HEAT line) and 120251608550430361 (host_gift upload): both "Processing" (in review), $0.00 spent at publish.
+- Meta warned the account spending limit is $75 (equals the lifetime budget). Left unchanged on purpose: it is the hard cap. Raise it only if the budget is raised.
+- Declined the Meta AI "ad variations" prompt.
+- Still open: add each new reel as an existing-post ad as it publishes (swap the weakest weekly); optional dayparting; Advertiser/Payer fields not required for US.
