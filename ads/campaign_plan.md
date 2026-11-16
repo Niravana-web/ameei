@@ -32,8 +32,8 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 ## Before launch checklist
 - [x] Payment method added: Visa ····5142, USD, US billing. Monthly account spending limit $75 (resets on the 1st).
 - [x] Ameei Page confirmed for ads, phone verified (Lokesh), Account overview shows setup complete.
-- [~] Domain ameei.in added (ID 1465907779006540); meta tag is in web/src/app/layout.tsx, NOT deployed yet. After deploy: Business settings → Domains → ameei.in → Verify domain.
-- [~] Pixel/dataset "ameei" created (ID 2866828870386268); base code is in web/src/app/layout.tsx, NOT deployed yet. Advanced matching off.
+- [x] Domain ameei.in VERIFIED in Meta (ID 1465907779006540) on 2026-11-16 after the web/ deploy (commit 38fd8c4, Vercel root ./web).
+- [x] Pixel/dataset "ameei" (ID 2866828870386268) live on www.ameei.in (fbq loaded on the page). Advanced matching off. Confirm PageView in Events Manager after a few minutes.
 - [ ] Review ad previews for cut-off hooks on 4:5 / 1:1 placements; keep 9:16 only if cropping hurts.
 - [ ] Claims in primary text follow design-system/guidelines/voice.md (no "healthy" as a nutrient claim without a fact next to it).
 
@@ -45,7 +45,7 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - Keyword comment-to-DM automation and 5 saved replies live (see crm/outreach_playbook.md).
 
 ## Still open before spend
-- Deploy web/ (pixel + domain tag + IG link + newsletter) and run the Subscriber migration, then click Verify domain.
-- Decide the first-pouch offer code promised in the DM/lead-form copy (currently "first-pouch code": create a 15% code in the store or change the copy).
+- [x] web/ deployed; Subscriber table pushed to the remote MySQL; /api/newsletter returns 400 on bad email and honeypot, 405 on GET.
+- [x] First-pouch offer code FIRSTPOUCH (15% off, first order only) created in Stripe and `allow_promotion_codes` enabled in checkout (commit 6e76158). Stripe key in web/.env is TEST mode: the same coupon + code must be created in LIVE mode (or a live key configured) before real customers can use it.
 - Reply to the July collaboration DMs (two US bloggers) with a sample offer.
 - Test the HEAT comment automation from a second account.

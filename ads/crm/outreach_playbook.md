@@ -24,7 +24,7 @@ Always: reply in the first person as ameei, lowercase brand name, one short joke
 > hey {first name or handle}! thanks for stopping on the {reel topic} reel. quick one: what's your heat, zero, medium, or "handle with respect"? I'll send you the right mix.
 
 **Day 0, if they answer the heat question**
-> {heat} it is. we're a small-batch roaster, nothing fried, nothing artificial, 8 oz pouch that fits in a pocket. want 15% off your first pouch? drop your email and I'll send the code.
+> {heat} it is. we're a small-batch roaster, nothing fried, nothing artificial, 8 oz pouch that fits in a pocket. want 15% off your first pouch? use FIRSTPOUCH at checkout on ameei.in (first order only). drop your email and I'll send the heat ladder too.
 
 **Day 2, if no reply**
 > no pressure, just leaving the heat ladder here: Straight Shooter (no chili) → Everyday Medium → Extra Hot Trail. roasted, never fried. ameei.in if you get curious.
@@ -55,9 +55,10 @@ Always: reply in the first person as ameei, lowercase brand name, one short joke
 - Intro: "Tell us your heat level and we'll send the right mix first. Roasted, never fried."
 - Questions: Full name, Email, ZIP code (prefilled); custom: "Which heat level are you?" (No chili / Medium / Extra hot), "Where do you snack most?" (Desk / Car / Gym / Trail / Couch).
 - Privacy policy URL: https://ameei.in/privacy (confirm the page exists before launching).
-- Thank-you: "You're on the list. Watch your inbox for the heat ladder and your first-pouch code."
+- Thank-you: "You're on the list. Use FIRSTPOUCH at ameei.in for 15% off your first pouch."
 
 ## Set up in Business Suite on 2026-11-16
 - Automation "Heat ladder keyword DM" (Comment to message, Instagram + Messenger, ON). Keywords: heat, spicy, ladder, link, where to buy, price, order, sample, recipe. Public reply: "check your DMs, sent you the heat ladder". DM asks for their heat level and points to ameei.in.
-- Saved replies (type the shortcut in the inbox reply box): `heat`, `buy`, `ship`, `thanks`, `wholesale`.
+- Saved replies (type the shortcut in the inbox reply box): `heat`, `buy`, `ship`, `thanks`, `wholesale`. `buy` names the FIRSTPOUCH code.
+- Offer code: **FIRSTPOUCH**, 15% off, first order only, no minimum, no expiry (Stripe coupon `firstpouch15`, created 2026-11-16 in TEST mode; recreate in live mode before real orders). Checkout shows an "Add promotion code" box.
 - Automation list: Business Suite → Inbox → Automations. Saved replies: inbox reply box → speech-bubble icon → Manage.
