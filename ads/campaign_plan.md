@@ -58,3 +58,10 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - Meta warned the account spending limit is $75 (equals the lifetime budget). Left unchanged on purpose: it is the hard cap. Raise it only if the budget is raised.
 - Declined the Meta AI "ad variations" prompt.
 - Still open: add each new reel as an existing-post ad as it publishes (swap the weakest weekly); optional dayparting; Advertiser/Payer fields not required for US.
+
+## Paused 2026-11-19 (user: "Yes, pause and re-cut")
+- Published reels after 1-3 days: carry_on 355 IG / 310 FB views, commute 15 / 158, host_gift 28 / 104. Avg play 2-4 s of 17 s; ~1 in 10 passes 3 s; 0 follows. Instagram stops distribution after a 15-30 person test.
+- Ads: $4.60 spent, 69 impressions (~$67 CPM), 0 profile visits. Ad set turned OFF 2026-11-19 (toggle in Ad sets view). Campaign and ads left in place for later reuse.
+- All 22 scheduled rows moved to Drafts (captions kept). Scheduled tab shows "Failed to publish" ghosts; Drafts tab lists all 22.
+- Diagnosis: v2 cuts open on a 5 s static establishing shot under a 96 px title card; voice line at ~11 s. Fix = edit pass (recut.py): open on motion/face, voice second, small hook at t=0, ~9 s, end card 0.8 s. No GPU.
+- Public FB comment on carry_on from a viewer: "AI crap." (Meta applies the AI-content label automatically.)
