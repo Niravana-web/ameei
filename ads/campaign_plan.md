@@ -65,3 +65,11 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - All 22 scheduled rows moved to Drafts (captions kept). Scheduled tab shows "Failed to publish" ghosts; Drafts tab lists all 22.
 - Diagnosis: v2 cuts open on a 5 s static establishing shot under a 96 px title card; voice line at ~11 s. Fix = edit pass (recut.py): open on motion/face, voice second, small hook at t=0, ~9 s, end card 0.8 s. No GPU.
 - Public FB comment on carry_on from a viewer: "AI crap." (Meta applies the AI-content label automatically.)
+
+
+## Relaunched 2026-11-19 (v3 re-cuts)
+- Budgets: account spending limit $75 -> $150/month; ad set lifetime budget $75 -> $150, end date unchanged (17 Dec 2026 EST), about $5.40/day for the remaining 28 days.
+- Creative: host_gift ad 120251608550430361 now runs the v3 cut; new ad 120251657401420361 "carry_on reel - v3 upload" runs the v3 carry_on cut (primary text mirrors host_gift's). Old carry_on existing-post ad 120251608426980361 turned OFF (keeps its likes but no spend). Advantage+ creative recommendation declined on duplicate. AI-media disclosure re-ticked on both edited ads (the media swap clears it).
+- Ad set turned ON 2026-11-19 ~23:00 IST, status Preparing.
+- Organic: 14 v3 reels scheduled as new posts (IG+FB), 20 Nov to 3 Dec 18:00 ET, one per day. See publish_plan.json v3_note.
+- Review on day 5 (24 Nov): hold rate (views past 3 s) on carry_on v3 vs v2 (v2 was 24 of 310 past 3 s on FB). If still under 10%, next suspect is the AI label, not the opener.
