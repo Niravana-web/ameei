@@ -28,10 +28,11 @@ MUSIC_VOL = 0.28
 # Rule of thumb: open on the shot with hands/motion or a face; voice line second,
 # kept whole; slow establishing shot last and short.
 PLANS = {
+    # carry_on: open on the pocket tap + look to camera (pouch still sealed), then pull + open, then the line.
     "carry_on": {
-        "order": [2, 3, 1],
-        "keep": {2: (0.5, 3.3), 3: (0.0, 5.3), 1: (0.6, 2.6)},
-        "hook": "TSA-proof. Gate-ready. 8 oz.",
+        "order": [1, 2, 3],
+        "keep": {1: (2.7, 5.3), 2: (0.0, 2.6), 3: (0.0, 5.3)},
+        "hook": "TSA-proof. Gate-ready.|8 ounces.",
     },
 }
 
@@ -57,8 +58,8 @@ def overlays(c, hook, out_dir):
     img = canvas()
     d = ImageDraw.Draw(img)
     f = P._font(P.FONT_DISPLAY, 72, 800)
-    lines = P._wrap(d, hook, f, W - 200)
-    y0 = 420
+    lines = [l for part in hook.split("|") for l in P._wrap(d, part, f, W - 200)]
+    y0 = 640
     bh = len(lines) * 84 + 40
     P._rounded(d, (70, y0 - 20, W - 70, y0 - 20 + bh), 26, (25, 9, 11, 150))
     y = y0
