@@ -34,6 +34,45 @@ PLANS = {
         "keep": {1: (2.7, 5.3), 2: (0.0, 2.6), 3: (0.0, 5.3)},
         "hook": "TSA-proof. Gate-ready.|8 ounces.",
     },
+    # commute_train: lift + shake + smile (sealed), pour into palm, then the line on the platform.
+    "commute_train": {"order": [1, 2, 3], "keep": {1: (1.5, 4.0), 2: (0.0, 2.6), 3: (0.0, 5.3)},
+                      "hook": "Commute snack.|Doesn't crumble."},
+    # host_gift: door opens + jar held up, pour into the bowl, then "you're invited back".
+    "host_gift": {"order": [1, 2, 3], "keep": {1: (2.0, 4.5), 2: (0.0, 2.5), 3: (0.0, 5.3)},
+                  "hook": "Stop bringing wine.|Bring this."},
+    # airplane (no voice): decline the pretzels, hand into the tin, crunch at the window.
+    "airplane": {"order": [1, 2, 3], "keep": {1: (1.0, 4.0), 2: (3.0, 5.3), 3: (0.0, 2.5)},
+                 "hook": "Skip the pretzels.|Bring real nuts."},
+    # scrubs_pocket: voice is shot 1 (pull from pocket -> line), kept whole; pinch; walk away.
+    "scrubs_pocket": {"order": [1, 2, 3], "keep": {1: (0.0, 5.3), 2: (0.0, 2.5), 3: (0.0, 2.5)},
+                      "hook": "12-hour shift.|Pocket-sized backup."},
+    # coffee_shop (no voice): tin out of the pocket + lid pop, pick from the tin, crunch + type.
+    "coffee_shop": {"order": [1, 2, 3], "keep": {1: (0.5, 3.5), 2: (0.0, 2.5), 3: (0.0, 2.5)},
+                    "hook": "Pocket snack|for the laptop life."},
+    # glovebox: voice is shot 1 (glovebox pop -> line), kept whole; pinch; pat the shirt pocket.
+    "glovebox": {"order": [1, 2, 3], "keep": {1: (0.0, 5.3), 2: (0.0, 2.5), 3: (3.0, 5.3)},
+                 "hook": "Glovebox snack|that survives July.", "hook_end": 3.3},   # he turns to camera at ~3.5 s
+    # trail (no voice): pouch out of the pack, gloved palm, wince + grin.
+    "trail": {"order": [1, 2, 3], "keep": {1: (1.5, 4.0), 2: (0.0, 2.5), 3: (0.0, 3.0)},
+              "hook": "Trail mix|with an actual kick."},
+    # stroller: voice is shot 1 (pouch out of the stroller pocket -> line), kept whole; one-handed pinch; reseal.
+    "stroller": {"order": [1, 2, 3], "keep": {1: (0.0, 5.3), 2: (0.0, 2.5), 3: (0.0, 2.5)},
+                 "hook": "Stroller-pocket snack.|For the grown-up.", "hook_end": 2.6},   # pouch lifted into the box at ~2.7 s
+    # study_night: blind reach lands a cashew (face in frame), cashew to camera, then "I'm awake now".
+    "study_night": {"order": [1, 2, 3], "keep": {1: (2.5, 5.0), 2: (0.0, 2.2), 3: (0.0, 5.3)},
+                    "hook": "1am study snack.|Slow burn."},
+    # tailgate: pour from the pouch, hands + laugh, then "extra hot".
+    "tailgate": {"order": [1, 2, 3], "keep": {1: (0.0, 2.6), 2: (0.0, 2.5), 3: (0.0, 5.3)},
+                 "hook": "Tailgate snack.|Roasted, not fried."},
+    # build_your_own: hands lift the cashew + chili bowls, pour into the mix, then "mine's medium".
+    "build_your_own": {"order": [1, 2, 3], "keep": {1: (2.0, 4.5), 2: (0.0, 2.4), 3: (0.0, 5.3)},
+                       "hook": "Build your own mix.|Set your own heat."},
+    # movie_night: hands bump in the bowl, scoop, then "where have these been".
+    "movie_night": {"order": [1, 2, 3], "keep": {1: (0.0, 2.6), 2: (0.5, 3.0), 3: (0.0, 5.3)},
+                    "hook": "Movie night snack.|Roasted, not fried."},
+    # lunchbox (no voice): spoon in + lid click, short close-up, she picks a flake and crunches.
+    "lunchbox": {"order": [1, 2, 3], "keep": {1: (1.5, 4.5), 2: (0.0, 1.8), 3: (1.5, 5.3)},
+                 "hook": "Nut-free recipe.|Lunchbox approved."},
 }
 
 
@@ -131,7 +170,9 @@ def assemble(c, plan, clips, music, out_path, work_dir):
 
     idx = n
     # hook visible from frame 0 through the first shot; captions follow their own shot
-    ov_order = [("badge", 0, end_start), ("hook", 0.0, (starts[1] + 0.15) if n > 1 else total)]
+    # hook_end (optional, per plan): fade the hook early when a face or the pouch moves into its box
+    hook_end = plan.get("hook_end") or ((starts[1] + 0.15) if n > 1 else total)
+    ov_order = [("badge", 0, end_start), ("hook", 0.0, hook_end)]
     for i, (s, _, _, _) in enumerate(segs):
         st = starts[i] + (0.0 if i == 0 else 0.15)
         if i == 0:
