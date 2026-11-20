@@ -15,7 +15,7 @@ const FALLBACK_IMAGE = "/images/pouch/pouch-table.jpg";
 
 export const metadata: Metadata = {
   title: "Studio — build your pouch",
-  description: `Build your ${STUDIO_POUCH.label} pouch: pick nuts, cereals and extras, set the heat and the salt. One price, roasted and shipped within 24 hours.`,
+  description: `Build your ${STUDIO_POUCH.label} pouch: pick nuts, cereals and extras, set the heat and the salt. One price, roasted to order and shipped across the US.`,
   alternates: { canonical: `${siteConfig.url}/studio` },
 };
 

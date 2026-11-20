@@ -31,7 +31,7 @@ export function Hero() {
             <p className="animate-fade-up delay-3 max-w-lg font-body text-body-lg text-ash">
               ameei makes exactly one thing: an {STUDIO_POUCH.label.replace("oz", " oz")} pouch of
               roasted nuts, cereals and extras, blended the way you ask for it. Pick what goes
-              in, set the heat and the salt, and we roast, blend and ship it within 24 hours.
+              in, set the heat and the salt, and we roast, blend and ship it to your door.
             </p>
             <div className="animate-fade-up delay-4 flex flex-wrap items-center gap-3 pt-1">
               <ButtonLink href="/studio">

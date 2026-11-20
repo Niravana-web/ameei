@@ -22,7 +22,7 @@ ${pantry}
 ${presets}
 
 ## Key facts
-- Every pouch is roasted, blended and shipped within 24 hours of the order.
+- Every pouch is roasted and blended to order, then shipped across the US.
 - Roasted, never fried. No artificial colors or preservatives.
 - Made in a kitchen that handles peanuts and tree nuts.
 - First order: code FIRSTPOUCH takes 15% off at checkout.

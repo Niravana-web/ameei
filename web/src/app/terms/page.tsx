@@ -39,7 +39,7 @@ export default function TermsPage() {
           <section>
             <h2 className="mb-3 font-display text-headline-md text-crimson-deep">4. Shipping</h2>
             <p>
-              We ship within 24 hours of payment confirmation on business days. Delivery times are estimates and not guaranteed. Risk of loss passes to you upon handoff to the carrier.
+              We ship on business days after payment confirmation. Delivery times are estimates and not guaranteed. Risk of loss passes to you upon handoff to the carrier.
             </p>
           </section>
 

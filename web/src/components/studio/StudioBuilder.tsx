@@ -386,7 +386,7 @@ export function StudioBuilder({
           )}
 
           <p className="font-body text-body-md leading-relaxed text-ash/80">
-            Roasted and sealed within 24 hours, shipped across the US. Your recipe is saved to your
+            Roasted and sealed to order, shipped across the US. Your recipe is saved to your
             account for reorders. Made in a kitchen that handles peanuts and tree nuts.
           </p>
         </div>

@@ -15,7 +15,7 @@ const steps = [
   {
     n: "03",
     title: "We roast, blend and ship",
-    body: "Your pouch is roasted and sealed within 24 hours of the order, then shipped anywhere in the US. Your recipe is saved for next time.",
+    body: "Your pouch is roasted and sealed to order, then shipped anywhere in the US. Your recipe is saved for next time.",
   },
 ];
 

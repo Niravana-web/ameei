@@ -17,7 +17,7 @@ const prisma = new PrismaClient({
 });
 
 const SHIPPING_DEFAULT =
-  "Ships within 24 hours. Due to the perishable nature of our products, we do not accept returns. If there is an issue with your order, please contact our spice masters.";
+  "Ships on business days. Due to the perishable nature of our products, we do not accept returns. If there is an issue with your order, please contact our spice masters.";
 
 /**
  * Every product in the range is an American Healthy Mix — a named recipe drawn
