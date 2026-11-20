@@ -68,12 +68,6 @@ export function Hero() {
                 className="object-cover"
               />
             </div>
-            <div className="animate-float absolute -left-2 bottom-8 -rotate-6 rounded-xl bg-saffron px-4 py-3 text-ink shadow-xl md:-left-5">
-              <span className="block font-body text-[10px] font-bold uppercase tracking-[0.16em]">
-                Made to order
-              </span>
-              <span className="block font-accent text-2xl leading-none">ships in 24 hours</span>
-            </div>
           </div>
         </div>
       </Container>
