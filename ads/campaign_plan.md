@@ -73,3 +73,9 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - Ad set turned ON 2026-11-19 ~23:00 IST, status Preparing.
 - Organic: 14 v3 reels scheduled as new posts (IG+FB), 20 Nov to 3 Dec 18:00 ET, one per day. See publish_plan.json v3_note.
 - Review on day 5 (24 Nov): hold rate (views past 3 s) on carry_on v3 vs v2 (v2 was 24 of 310 past 3 s on FB). If still under 10%, next suspect is the AI label, not the opener.
+
+## 2026-11-20: three more v3 ads
+- Added to ad set 120251608426970361 by duplicating the carry_on v3 ad (Advantage+ creative recommendation declined, Test creative off): scrubs_pocket 120251677196920361, tailgate 120251677270540361, movie_night 120251677295050361. Each: v3 upload copy from out/v3/publish, primary text mirrors the reel hook + "built to your order in an 8 oz pouch. First pouch? FIRSTPOUCH takes 15% off at ameei.in", AI-media disclosure ticked, CTA Visit Instagram profile.
+- Ad set now has 5 active ads (carry_on v3, host_gift v3, scrubs_pocket, tailgate, movie_night) and 1 off (carry_on existing post). Budget unchanged at $150 lifetime.
+- Day-1 numbers (19 Nov ET): host_gift v3 $6.58 / 110 imp / 5 profile visits; carry_on v3 $0.99 / 19 / 1. CPM $52-60.
+- Review Mon 24 Nov: keep the top 3 by cost per profile visit, turn off the bottom 2. Launch tracker: https://claude.ai/artifact/28dmBsLg173FqYLxvP8z5i
