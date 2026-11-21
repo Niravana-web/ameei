@@ -79,3 +79,9 @@ Call to action: Follow (profile) / Learn more → https://ameei.in (placeholder 
 - Ad set now has 5 active ads (carry_on v3, host_gift v3, scrubs_pocket, tailgate, movie_night) and 1 off (carry_on existing post). Budget unchanged at $150 lifetime.
 - Day-1 numbers (19 Nov ET): host_gift v3 $6.58 / 110 imp / 5 profile visits; carry_on v3 $0.99 / 19 / 1. CPM $52-60.
 - Review Mon 24 Nov: keep the top 3 by cost per profile visit, turn off the bottom 2. Launch tracker: https://claude.ai/artifact/28dmBsLg173FqYLxvP8z5i
+
+## 2026-11-21: Instagram-only placements
+- Platform breakdown 17-20 Nov: Facebook Reels $17.69 / 225 imp / $79 CPM / 0 profile visits; Instagram Reels $3.08 / 100 imp / $31 CPM / 9 profile visits ($0.34 each). 85% of spend was going to Facebook and producing nothing.
+- Ad set 120251608426970361 edited: Facebook platform off, Instagram Reels the only placement, "Allow limited spending to excluded placements" off. Published ~13:10 IST, status Processing (re-enters learning briefly).
+- Expected at $5.40/day: ~175 Instagram impressions and 8-15 profile visits per day if the $0.34 holds.
+- Organic reels still post to both pages; that stays.
